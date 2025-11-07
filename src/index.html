@@ -1,548 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KidSync - Because Every Moment Matters</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KidSync</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      font-family: "Poppins", sans-serif;
+      color: white;
+      flex-direction: column;
+      text-align: center;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
 
+    p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
 
-        header {
-            background: white;
-            padding: 1.5rem 5%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    .loader {
+      margin-top: 2rem;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2563eb;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #2563eb;
-        }
-
-        .cta-button {
-            background: #f97316;
-            color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-        }
-
-    
-        .hero {
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            color: white;
-            padding: 6rem 5% 8rem;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .tagline {
-            font-size: 1.8rem;
-            font-style: italic;
-            margin-bottom: 1rem;
-            color: #fbbf24;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.95;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .primary-btn {
-            background: #f97316;
-            color: white;
-            padding: 1rem 3rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .primary-btn:hover {
-            background: #ea580c;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .secondary-btn {
-            background: white;
-            color: #2563eb;
-            padding: 1rem 3rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .secondary-btn:hover {
-            background: #f0f9ff;
-            transform: translateY(-3px);
-        }
-
-        /* About Section */
-        .about {
-            padding: 5rem 5%;
-            background: white;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            color: #2563eb;
-            margin-bottom: 1rem;
-        }
-
-        .section-header p {
-            font-size: 1.2rem;
-            color: #666;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .about-text h3 {
-            color: #f97316;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .about-text p {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 1.5rem;
-        }
-
-        .about-image {
-            background: linear-gradient(135deg, #dbeafe 0%, #fed7aa 100%);
-            height: 400px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: #2563eb;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 5rem 5%;
-            background: #f8fafc;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            color: white;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            color: #1e40af;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card p {
-            color: #666;
-            line-height: 1.7;
-        }
-
-        /* Advanced Features */
-        .advanced {
-            padding: 5rem 5%;
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            color: white;
-        }
-
-        .advanced .section-header h2,
-        .advanced .section-header p {
-            color: white;
-        }
-
-        .advanced-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .advanced-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .advanced-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            color: #fbbf24;
-        }
-
-        .advanced-card p {
-            opacity: 0.95;
-            line-height: 1.7;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 5rem 5%;
-            background: white;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .step {
-            text-align: center;
-        }
-
-        .step-number {
-            width: 80px;
-            height: 80px;
-            background: #f97316;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0 auto 1.5rem;
-        }
-
-        .step h3 {
-            color: #2563eb;
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-        }
-
-        .step p {
-            color: #666;
-        }
-
-
-        .final-cta {
-            padding: 5rem 5%;
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .final-cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .final-cta p {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.95;
-        }
-
-        .final-cta .primary-btn {
-            background: white;
-            color: #f97316;
-        }
-
-        .final-cta .primary-btn:hover {
-            background: #f0f9ff;
-        }
-
-        /* Footer */
-        footer {
-            background: #1e293b;
-            color: white;
-            padding: 3rem 5%;
-            text-align: center;
-        }
-
-        footer p {
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-        }
-    </style>
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <div class="logo">KidSync</div>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <a href="#" class="cta-button">Request Demo</a>
-        </nav>
-    </header>
+  <h1>KidSync</h1>
+  <p>Because Every Moment Matters</p>
+  <div class="loader"></div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome to KidSync</h1>
-            <p class="tagline">"Because Every Moment Matters"</p>
-            <p>Stay connected to your child's school day with real-time updates, smart tracking, and instant communication between parents and teachers.</p>
-            <div class="hero-buttons">
-                <a href="#" class="primary-btn">Get Started</a>
-                <a href="#" class="secondary-btn">Watch Demo</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about" id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Bridging Schools and Parents</h3>
-                    <p>KidSync is an interactive web platform designed to bridge the communication gap between schools and parents of young children (ages 3–7).</p>
-                    <p>From morning bus rides to afternoon activities, stay informed about every meaningful moment in your child's day. Foster trust, transparency, and partnership with teachers while keeping your child's safety and happiness at the center.</p>
-                </div>
-                <div class="about-image">
-                    [Platform Preview Image]
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Core Features -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header">
-                <h2>Core Features</h2>
-                <p>Everything you need to stay connected with your child's school experience</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🚌</div>
-                    <h3>Secure Journey Tracking</h3>
-                    <p>Live GPS tracking of school buses with real-time boarding and arrival notifications. Geofenced attendance logging ensures your child's safe arrival at school.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📖</div>
-                    <h3>Digital Daybook</h3>
-                    <p>Real-time activity updates with photos and videos. Get a beautifully compiled end-of-day summary showing meals, naps, activities, and mood.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🍎</div>
-                    <h3>Health & Wellness Hub</h3>
-                    <p>Detailed meal tracking, hydration logs, and instant health alerts. Special care plans for children with allergies or medical needs.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⭐</div>
-                    <h3>Milestones & Achievements</h3>
-                    <p>Digital badges and developmental milestone tracking. Visual progress charts show your child's growth in participation, social skills, and learning.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <h3>School-Home Partnership</h3>
-                    <p>Structured messaging, integrated calendar with RSVP, and digital resource library. All school communications in one organized place.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔔</div>
-                    <h3>Smart Notifications</h3>
-                    <p>Urgent alerts for safety issues, daily digests of activities, and weekly insights with achievement reports and upcoming events.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Advanced Features -->
-    <section class="advanced">
-        <div class="container">
-            <div class="section-header">
-                <h2>The KidSync Intelligence</h2>
-                <p>Advanced features that set us apart</p>
-            </div>
-            <div class="advanced-grid">
-                <div class="advanced-card">
-                    <h3>🎭 Emotional Compass</h3>
-                    <p>Track your child's emotional state throughout the day. View mood timelines to identify patterns, triggers for anxiety, and sources of joy for invaluable developmental insights.</p>
-                </div>
-                <div class="advanced-card">
-                    <h3>🔐 Guardian Gateway</h3>
-                    <p>Advanced check-in/out system using unique QR codes. ID verification for unauthorized individuals with photo approval sent to parents for extra security.</p>
-                </div>
-                <div class="advanced-card">
-                    <h3>📊 Insight Engine</h3>
-                    <p>Transform your child's data into understanding. Visualize sleep patterns correlated with mood, track nutritional intake, and monitor attendance trends over time.</p>
-                </div>
-                <div class="advanced-card">
-                    <h3>🎯 Personalized Analytics</h3>
-                    <p>Business intelligence for parenting. See weekly patterns, monthly trends, and predictive insights to better understand your child's needs and growth.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <h2>How It Works</h2>
-                <p>Get started in three simple steps</p>
-            </div>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Register Your Child</h3>
-                    <p>Create your account and add your child's information, preferences, and any special care requirements.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Connect with School</h3>
-                    <p>Your child's school links their classroom activities to your KidSync dashboard automatically.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Stay Informed</h3>
-                    <p>Receive real-time updates, view daily summaries, and engage with teachers through one unified platform.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="final-cta">
-        <div class="container">
-            <h2>Ready to Transform Your Child's School Experience?</h2>
-            <p>Join thousands of parents who trust KidSync to keep them connected</p>
-            <a href="#" class="primary-btn">Request a Demo Today</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 KidSync. All rights reserved. | Because Every Moment Matters.</p>
-        </div>
-    </footer>
+  <script>
+    console.log("Redirecting to login page...");
+    // Redirect to login page after 2 seconds
+    setTimeout(() => {
+      window.location.href = "src/login.html"; 
+      // 👉 If this doesn't work, change to "src/login.html"
+    }, 2000);
+  </script>
 </body>
 </html>
