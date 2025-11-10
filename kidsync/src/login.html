@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - KidSync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { display: flex; max-width: 1200px; width: 90%; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .left { flex: 1; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; padding: 3rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .left h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .left p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem; }
+        .right { flex: 1; padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+        .right h2 { color: #2563eb; font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .subtitle { color: #666; margin-bottom: 2rem; font-size: 0.9rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; color: #333; font-weight: 500; margin-bottom: 0.4rem; }
+        .form-group input { width: 100%; padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: 0.3s; }
+        .form-group input:focus { outline: none; border-color: #2563eb; }
+        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .remember { display: flex; align-items: center; gap: 0.4rem; }
+        .forgot { color: #2563eb; text-decoration: none; }
+        .forgot:hover { text-decoration: underline; }
+        .btn { width: 100%; padding: 0.9rem; background: #f97316; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: #ea580c; }
+        .divider { text-align: center; color: #999; margin: 1.5rem 0; }
+        .signup-link { text-align: center; color: #666; }
+        .signup-link a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .signup-link a:hover { text-decoration: underline; }
+        .demo { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 0.8rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.85rem; }
+        @media (max-width: 768px) { .container { flex-direction: column; } .left { padding: 2rem; } .right { padding: 2rem; } .left h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync Logo" style="width: 200px; margin-bottom: 1.5rem;">
+            <p>"Because Every Moment Matters"</p>
+            <p>Stay connected to your child's school day with real-time updates</p>
+        </div>
+        <div class="right">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Login to your parent dashboard</p>
+            <div class="demo">
+                <strong>Demo:</strong> parent@demo.com / demo123
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" required placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required placeholder="Enter password">
+                </div>
+                <div class="options">
+                    <label class="remember"><input type="checkbox"> Remember me</label>
+                    <a href="#" class="forgot">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <div class="divider">OR</div>
+            <div class="signup-link">
+                Don't have account? <a href="signup.html">Sign Up</a> | <a href="index.html">← Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            if (email === 'parent@demo.com' && password === 'demo123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userName', 'Sarah Johnson');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Invalid credentials!\nDemo: parent@demo.com / demo123');
+            }
+        });
+    </script>
+</body>
+</html>

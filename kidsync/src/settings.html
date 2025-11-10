@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - KidSync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 2rem; }
+        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 0.3rem; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); }
+        .main { margin-left: 220px; flex: 1; padding: 0; }
+        .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .navbar img { width: 100px; }
+        .content { padding: 2rem; max-width: 800px; }
+        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header h1 { color: #1e40af; font-size: 1.6rem; }
+        .section { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .section h3 { color: #1e40af; margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #e5e7eb; }
+        .setting-item:last-child { border-bottom: none; }
+        .setting-label { color: #333; font-weight: 600; }
+        .setting-desc { color: #666; font-size: 0.85rem; }
+        .toggle { width: 50px; height: 28px; background: #e5e7eb; border-radius: 14px; cursor: pointer; position: relative; transition: 0.3s; }
+        .toggle.active { background: #10b981; }
+        .toggle-dot { width: 24px; height: 24px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle.active .toggle-dot { left: 24px; }
+        .input-field { padding: 0.7rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 0.95rem; width: 100%; }
+        .input-field:focus { outline: none; border-color: #2563eb; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1e40af; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .profile-pic { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; }
+        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .content { max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menu</h3>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="activities.html">📖 Activities</a>
+            <a href="health.html">🍎 Health</a>
+            <a href="milestones.html">⭐ Milestones</a>
+            <a href="calendar.html">📅 Calendar</a>
+            <a href="settings.html" style="background: rgba(255,255,255,0.15);">⚙️ Settings</a>
+            <button class="logout" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="main">
+            <div class="navbar">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+            </div>
+
+            <div class="content">
+                <div class="header">
+                    <h1>⚙️ Settings</h1>
+                </div>
+
+                <!-- PROFILE -->
+                <div class="section">
+                    <h3>👤 Profile</h3>
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="profile-pic">SJ</div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Full Name</div>
+                            <div class="setting-desc">Sarah Johnson</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</button>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Email</div>
+                            <div class="setting-desc">sarah@email.com</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</button>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Phone</div>
+                            <div class="setting-desc">+254 700 000 000</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</button>
+                    </div>
+                </div>
+
+                <!-- NOTIFICATIONS -->
+                <div class="section">
+                    <h3>🔔 Notifications</h3>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Bus Alerts</div>
+                            <div class="setting-desc">Get notified when bus arrives/leaves</div>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Health Alerts</div>
+                            <div class="setting-desc">Notifications about health issues</div>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Daily Summary</div>
+                            <div class="setting-desc">Daily report of activities</div>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECURITY -->
+                <div class="section">
+                    <h3>🔐 Security</h3>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Change Password</div>
+                            <div class="setting-desc">Update your account password</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="alert('Change password feature coming soon')">Change</button>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Two-Factor Auth</div>
+                            <div class="setting-desc">Add extra security to your account</div>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DANGER ZONE -->
+                <div class="section" style="border-left: 4px solid #ef4444;">
+                    <h3 style="color: #ef4444;">⚠️ Danger Zone</h3>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Delete Account</div>
+                            <div class="setting-desc">Permanently delete your account and all data</div>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="deleteAccount()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSwitch(el) {
+            el.classList.toggle("active");
+        }
+
+        function deleteAccount() {
+            if (confirm("Are you sure? This cannot be undone!")) {
+                alert("Account deletion requested. Redirecting to home...");
+                window.location.href = "index.html";
+            }
+        }
+
+        function logout() {
+            if (confirm("Logout?")) {
+                localStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - KidSync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 2rem; }
+        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 0.3rem; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); }
+        .main { margin-left: 220px; flex: 1; padding: 0; }
+        .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .navbar img { width: 100px; }
+        .content { padding: 2rem; max-width: 800px; }
+        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header h1 { color: #1e40af; font-size: 1.6rem; }
+        .section { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .section h3 { color: #1e40af; margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #e5e7eb; }
+        .setting-item:last-child { border-bottom: none; }
+        .setting-label { color: #333; font-weight: 600; }
+        .setting-desc { color: #666; font-size: 0.85rem; }
+        .toggle { width: 50px; height: 28px; background: #e5e7eb; border-radius: 14px; cursor: pointer; position: relative; transition: 0.3s; }
+        .toggle.active { background: #10b981; }
+        .toggle-dot { width: 24px; height: 24px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle.active .toggle-dot { left: 24px; }
+        .input-field { padding: 0.7rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 0.95rem; width: 100%; }
+        .input-field:focus { outline: none; border-color: #2563eb; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1e40af; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .profile-pic { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; }
+        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .content { max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menu</h3>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="activities.html">📖 Activities</a>
+            <a href="health.html">🍎 Health</a>
+            <a href="milestones.html">⭐ Milestones</a>
+            <a href="calendar.html">📅 Calendar</a>
+            <a href="settings.html" style="background: rgba(255,255,255,0.15);">⚙️ Settings</a>
+            <button class="logout" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="main">
+            <div class="navbar">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+            </div>
+
+            <div class="content">
+                <div class="header">
+                    <h1>⚙️ Settings</h1>
+                </div>
+
+                <!-- PROFILE -->
+                <div class="section">
+                    <h3>👤 Profile</h3>
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="profile-pic">SJ</div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Full Name</div>
+                            <div class="setting-desc">Sarah Johnson</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</button>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Email</div>
+                            <div class="setting-desc">sarah@email.com</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</button>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Phone</div>
+                            <div class="setting-desc">+254 700 000 000</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</button>
+                    </div>
+                </div>
+
+                <!-- NOTIFICATIONS -->
+                <div class="section">
+                    <h3>🔔 Notifications</h3>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Bus Alerts</div>
+                            <div class="setting-desc">Get notified when bus arrives/leaves</div>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Health Alerts</div>
+                            <div class="setting-desc">Notifications about health issues</div>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Daily Summary</div>
+                            <div class="setting-desc">Daily report of activities</div>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECURITY -->
+                <div class="section">
+                    <h3>🔐 Security</h3>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Change Password</div>
+                            <div class="setting-desc">Update your account password</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="alert('Change password feature coming soon')">Change</button>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Two-Factor Auth</div>
+                            <div class="setting-desc">Add extra security to your account</div>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DANGER ZONE -->
+                <div class="section" style="border-left: 4px solid #ef4444;">
+                    <h3 style="color: #ef4444;">⚠️ Danger Zone</h3>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Delete Account</div>
+                            <div class="setting-desc">Permanently delete your account and all data</div>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="deleteAccount()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSwitch(el) {
+            el.classList.toggle("active");
+        }
+
+        function deleteAccount() {
+            if (confirm("Are you sure? This cannot be undone!")) {
+                alert("Account deletion requested. Redirecting to home...");
+                window.location.href = "index.html";
+            }
+        }
+
+        function logout() {
+            if (confirm("Logout?")) {
+                localStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - KidSync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 2rem; }
+        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 0.3rem; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); }
+        .main { margin-left: 220px; flex: 1; padding: 0; }
+        .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .navbar img { width: 100px; }
+        .content { padding: 2rem; }
+        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header h1 { color: #1e40af; font-size: 1.6rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .calendar { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .cal-header h3 { color: #1e40af; }
+        .nav-btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; }
+        .day-name { font-weight: 600; color: #1e40af; padding: 0.5rem; }
+        .day { padding: 0.8rem; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .day:hover { background: #f0f9ff; }
+        .day.event { background: #fef3c7; font-weight: 600; }
+        .events { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .event-item { background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #f97316; }
+        .event-item h4 { color: #1e40af; margin-bottom: 0.3rem; }
+        .event-date { color: #666; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .event-desc { color: #555; font-size: 0.9rem; margin-bottom: 0.8rem; }
+        .event-btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+        .event-btn.attending { background: #10b981; }
+        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menu</h3>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="activities.html">📖 Activities</a>
+            <a href="health.html">🍎 Health</a>
+            <a href="milestones.html">⭐ Milestones</a>
+            <a href="calendar.html" style="background: rgba(255,255,255,0.15);">📅 Calendar</a>
+            <a href="settings.html">⚙️ Settings</a>
+            <button class="logout" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="main">
+            <div class="navbar">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+            </div>
+
+            <div class="content">
+                <div class="header">
+                    <h1>📅 School Calendar & Events</h1>
+                </div>
+
+                <div class="grid">
+                    <div class="calendar">
+                        <div class="cal-header">
+                            <button class="nav-btn">← Prev</button>
+                            <h3 id="monthYear">November 2025</h3>
+                            <button class="nav-btn">Next →</button>
+                        </div>
+                        <div class="days">
+                            <div class="day-name">Sun</div>
+                            <div class="day-name">Mon</div>
+                            <div class="day-name">Tue</div>
+                            <div class="day-name">Wed</div>
+                            <div class="day-name">Thu</div>
+                            <div class="day-name">Fri</div>
+                            <div class="day-name">Sat</div>
+                            <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div>
+                            <div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="day">14</div>
+                            <div class="day">15</div><div class="day event">16</div><div class="day">17</div><div class="day event">18</div><div class="day">19</div><div class="day">20</div><div class="day">21</div>
+                            <div class="day">22</div><div class="day">23</div><div class="day event">24</div><div class="day">25</div><div class="day">26</div><div class="day">27</div><div class="day">28</div>
+                            <div class="day">29</div><div class="day">30</div>
+                        </div>
+                    </div>
+
+                    <div class="events">
+                        <h3 style="color: #1e40af; margin-bottom: 1.5rem;">Upcoming Events</h3>
+                        <div class="event-item">
+                            <h4>📚 Parent-Teacher Conference</h4>
+                            <div class="event-date">November 16, 2025 | 3:00 PM</div>
+                            <div class="event-desc">Discuss your child's progress and development</div>
+                            <button class="event-btn attending">✓ Attending</button>
+                        </div>
+                        <div class="event-item">
+                            <h4>🎉 School Field Trip</h4>
+                            <div class="event-date">November 18, 2025 | 9:00 AM</div>
+                            <div class="event-desc">Visit to Nairobi Museum - Bring packed lunch</div>
+                            <button class="event-btn" onclick="rsvp(this)">RSVP</button>
+                        </div>
+                        <div class="event-item">
+                            <h4>🎄 Holiday Celebration</h4>
+                            <div class="event-date">November 24, 2025 | 2:00 PM</div>
+                            <div class="event-desc">End of term party with parents and kids</div>
+                            <button class="event-btn" onclick="rsvp(this)">RSVP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function rsvp(btn) {
+            btn.textContent = "✓ Attending";
+            btn.classList.add("attending");
+            btn.disabled = true;
+        }
+
+        function logout() {
+            if (confirm("Logout?")) {
+                localStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

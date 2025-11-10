@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KidSync Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .dashboard { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { font-size: 1.2rem; margin-bottom: 2rem; }
+        .nav-section { margin-bottom: 1.5rem; }
+        .nav-section-title { font-size: 0.75rem; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; font-weight: 600; }
+        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); }
+        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
+        .main { margin-left: 220px; padding: 0; }
+        .navbar { background: white; padding: 1.2rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .navbar img { width: 100px; height: auto; }
+        .content { padding: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header h1 { color: #1e40af; font-size: 1.6rem; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .section-title { color: #1e40af; font-size: 1.3rem; margin: 1.5rem 0 1rem; font-weight: 600; }
+        .kids-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .kid-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #f97316; transition: 0.3s; height: 100%; }
+        .kid-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+        .kid-card.active { border-left-color: #2563eb; background: #f0f9ff; }
+        .kid-header { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
+        .kid-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; }
+        .kid-info h3 { color: #1e40af; font-size: 1.1rem; margin-bottom: 0.2rem; }
+        .kid-info p { color: #666; font-size: 0.9rem; }
+        .status-badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.8rem; }
+        .status-at-school { background: #d1fae5; color: #065f46; }
+        .status-on-bus { background: #fef3c7; color: #92400e; }
+        .status-home { background: #dbeafe; color: #1e40af; }
+        .quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; }
+        .stat { background: #f8fafc; padding: 0.8rem; border-radius: 8px; text-align: center; }
+        .stat .val { color: #f97316; font-size: 1.2rem; font-weight: bold; }
+        .stat .lbl { color: #666; font-size: 0.8rem; }
+        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .btn { padding: 0.6rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1e40af; }
+        .btn-secondary { background: #f97316; color: white; }
+        .btn-secondary:hover { background: #ea580c; }
+        .activity { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .activity-item { display: flex; gap: 1rem; padding: 0.8rem; border-bottom: 1px solid #eee; }
+        .activity-item:last-child { border-bottom: none; }
+        .time { min-width: 70px; color: #f97316; font-weight: 600; font-size: 0.85rem; }
+        .event { color: #555; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .feature-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .feature-card h3 { color: #1e40af; margin-bottom: 1rem; }
+        .location-info { background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #2563eb; margin-bottom: 1rem; }
+        .loc-line { font-size: 0.9rem; color: #1e40af; margin: 0.5rem 0; }
+        .map { width: 100%; height: 180px; background: linear-gradient(135deg, #dbeafe, #fed7aa); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .messages { margin-top: 1rem; }
+        .msg-list { background: #f8fafc; border-radius: 8px; height: 180px; overflow-y: auto; margin-bottom: 0.8rem; padding: 0.8rem; }
+        .msg { padding: 0.6rem; border-bottom: 1px solid #e5e7eb; font-size: 0.85rem; }
+        .msg-teacher { background: #fef3c7; }
+        .msg-parent { background: #dbeafe; text-align: right; }
+        .msg-input { display: flex; gap: 0.5rem; }
+        .msg-input input { flex: 1; padding: 0.6rem; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 0.9rem; }
+        .msg-input button { background: #f97316; color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; cursor: pointer; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .kids-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h3>Menu</h3>
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="#">📊 Dashboard</a>
+                <a href="#">📍 Tracking</a>
+                <a href="#">📖 Activities</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Info</div>
+                <a href="#">🍎 Health</a>
+                <a href="#">⭐ Milestones</a>
+                <a href="#">💬 Messages</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a href="#">📅 Calendar</a>
+                <a href="#">⚙️ Settings</a>
+            </div>
+            <button class="logout" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="main">
+            <div class="navbar">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync Logo">
+            </div>
+
+            <div class="content">
+                <div class="header">
+                    <h1>Welcome, <span id="userName">Sarah</span> 👋</h1>
+                    <div style="display: flex; gap: 2rem; align-items: center;">
+                        <button style="background: #2563eb; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; transition: 0.3s;" onclick="openMessages()" title="Messages">💬</button>
+                        <div class="avatar" id="avatar">SJ</div>
+                    </div>
+                </div>
+
+                <h2 class="section-title">👶 Your Children</h2>
+                <div class="kids-grid" id="kidsGrid"></div>
+
+                <h2 class="section-title">📋 Today's Activity</h2>
+                <div class="activity" id="activityFeed"></div>
+
+                <h2 class="section-title">📍 Location & 💬 Messaging</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>📍 Live Location Tracking</h3>
+                        <div class="location-info">
+                            <div class="loc-line">🚌 <strong>Status:</strong> <span id="busStatus">At School</span></div>
+                            <div class="loc-line">📍 <strong>Location:</strong> <span id="locationName">Nairobi Primary School</span></div>
+                            <div class="loc-line">🕐 <strong>Last Updated:</strong> <span id="locationTime">8:45 AM</span></div>
+                            <div class="loc-line">📌 <strong>Latitude:</strong> <span id="latitude">-1.2965</span></div>
+                            <div class="loc-line">📌 <strong>Longitude:</strong> <span id="longitude">36.7965</span></div>
+                            <div class="loc-line">🚗 <strong>Speed:</strong> <span id="speed">0 km/h</span></div>
+                        </div>
+                        <div class="map">📍 Map Integration Ready</div>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>💬 Teacher Messages</h3>
+                        <div class="messages">
+                            <div class="msg-list" id="msgList">
+                                <div class="msg msg-teacher"><strong>Teacher:</strong> Good morning! All is well</div>
+                                <div class="msg msg-parent"><strong>You:</strong> Thanks for update</div>
+                            </div>
+                            <div class="msg-input">
+                                <input type="text" id="msgInput" placeholder="Type message...">
+                                <button onclick="sendMsg()">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const kids = [
+            { id: 1, name: "Daudi Okelo", age: 5, grade: "Grade 1", emoji: "🧒", status: "at-school", bus: "At School", loc: "Nairobi Primary School", time: "8:45 AM", lat: "-1.2965", lon: "36.7965", speed: "0 km/h", meals: "2 of 3", msgs: 3, activity: [{time: "8:15 AM", e: "Boarded Bus"}, {time: "8:45 AM", e: "Arrived at School"}, {time: "9:00 AM", e: "🍽️ Breakfast"}, {time: "10:30 AM", e: "🎨 Art Activity"}, {time: "12:30 PM", e: "🍽️ Lunch"}] },
+            { id: 2, name: "Zainab Ahmed", age: 4, grade: "Pre-K", emoji: "👧", status: "on-bus", bus: "On Bus", loc: "Heading to School", time: "8:30 AM", lat: "-1.2900", lon: "36.7850", speed: "45 km/h", meals: "1 of 3", msgs: 1, activity: [{time: "8:00 AM", e: "Boarded Bus"}, {time: "8:30 AM", e: "🚌 In transit - 5 mins away"}] },
+            { id: 3, name: "Liam Johnson", age: 6, grade: "Grade 2", emoji: "👦", status: "home", bus: "Picked Up", loc: "Home", time: "3:45 PM", lat: "-1.3050", lon: "36.8100", speed: "0 km/h", meals: "3 of 3", msgs: 5, activity: [{time: "3:15 PM", e: "Left School"}, {time: "3:45 PM", e: "✅ Alighted Safely"}] }
+        ];
+        let current = kids[0];
+
+        window.addEventListener("load", () => {
+            const user = localStorage.getItem("userName") || "Sarah Johnson";
+            document.getElementById("userName").textContent = user.split(" ")[0];
+            document.getElementById("avatar").textContent = user.split(" ").map(n => n[0]).join("");
+            renderKids();
+            updateLoc();
+            updateActivity();
+        });
+
+        function renderKids() {
+            const grid = document.getElementById("kidsGrid");
+            grid.innerHTML = kids.map(k => `
+                <div class="kid-card ${k.id === current.id ? "active" : ""}" onclick="selectKid(${k.id})">
+                    <div class="kid-header">
+                        <div class="kid-avatar">${k.emoji}</div>
+                        <div class="kid-info">
+                            <h3>${k.name}</h3>
+                            <p>${k.age} yrs • ${k.grade}</p>
+                        </div>
+                    </div>
+                    <div class="status-badge status-${k.status}">${k.bus}</div>
+                    <div class="quick-stats">
+                        <div class="stat"><div class="val">${k.meals}</div><div class="lbl">Meals</div></div>
+                        <div class="stat"><div class="val">${k.msgs}</div><div class="lbl">Messages</div></div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="selectKid(${k.id})">View</button>
+                        <button class="btn btn-secondary">📍 Track</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function selectKid(id) {
+            current = kids.find(k => k.id === id);
+            updateLoc();
+            updateActivity();
+            renderKids();
+        }
+
+        function updateLoc() {
+            document.getElementById("busStatus").textContent = current.bus;
+            document.getElementById("locationName").textContent = current.loc;
+            document.getElementById("locationTime").textContent = current.time;
+        }
+
+        function updateActivity() {
+            const feed = document.getElementById("activityFeed");
+            feed.innerHTML = current.activity.map(a => `<div class="activity-item"><div class="time">${a.time}</div><div class="event">${a.e}</div></div>`).join("");
+        }
+
+        function sendMsg() {
+            const inp = document.getElementById("msgInput");
+            if (!inp.value.trim()) return;
+            const list = document.getElementById("msgList");
+            const div = document.createElement("div");
+            div.className = "msg msg-parent";
+            div.innerHTML = `<strong>You:</strong> ${inp.value}`;
+            list.appendChild(div);
+            list.scrollTop = list.scrollHeight;
+            inp.value = "";
+        }
+
+        function logout() {
+            if (confirm("Logout?")) {
+                localStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+
+        function openMessages() {
+            alert("Opening Messages for " + current.name);
+        }
+    </script>
+</body>
+</html>

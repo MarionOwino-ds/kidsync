@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities - KidSync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 2rem; }
+        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; margin-bottom: 0.3rem; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); }
+        .main { margin-left: 220px; padding: 0; flex: 1; }
+        .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .navbar img { width: 100px; height: auto; }
+        .content { padding: 2rem; }
+        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header h1 { color: #1e40af; font-size: 1.6rem; }
+        .kid-selector { margin: 1rem 0; display: flex; gap: 0.5rem; }
+        .kid-btn { padding: 0.7rem 1.2rem; background: #f0f9ff; border: 2px solid #2563eb; color: #2563eb; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .kid-btn.active { background: #2563eb; color: white; }
+        .kid-btn:hover { transform: translateY(-2px); }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .activity-item { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s; }
+        .activity-item:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+        .photo { width: 100%; height: 200px; background: linear-gradient(135deg, #dbeafe, #fed7aa); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .activity-info { padding: 1.2rem; }
+        .activity-info h3 { color: #1e40af; margin-bottom: 0.5rem; }
+        .time { color: #666; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        .description { color: #555; font-size: 0.9rem; line-height: 1.5; }
+        .section-title { color: #1e40af; font-size: 1.4rem; margin: 2rem 0 1rem; font-weight: 600; }
+        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .gallery { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menu</h3>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="activities.html" style="background: rgba(255,255,255,0.15);">📖 Activities</a>
+            <a href="health.html">🍎 Health</a>
+            <a href="milestones.html">⭐ Milestones</a>
+            <a href="calendar.html">📅 Calendar</a>
+            <a href="settings.html">⚙️ Settings</a>
+            <button class="logout" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="main">
+            <div class="navbar">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+            </div>
+
+            <div class="content">
+                <div class="header">
+                    <h1>📖 Daily Activities & Photos</h1>
+                    <div class="kid-selector" id="kidSelector"></div>
+                </div>
+
+                <h2 class="section-title">Today's Moments</h2>
+                <div class="gallery" id="gallery"></div>
+
+                <h2 class="section-title">Weekly Highlights</h2>
+                <div class="gallery" id="weeklyGallery"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const kids = [
+            { id: 1, name: "Daudi Okelo", activities: [
+                { title: "🎨 Art Time", time: "10:30 AM", desc: "Created beautiful colorful painting with friends" },
+                { title: "🍽️ Lunch", time: "12:30 PM", desc: "Enjoyed rice and vegetables, had seconds!" },
+                { title: "📚 Story Time", time: "2:00 PM", desc: "Listened to amazing adventure story" }
+            ]},
+            { id: 2, name: "Zainab Ahmed", activities: [
+                { title: "🎵 Music Class", time: "9:30 AM", desc: "Learned new songs and danced" },
+                { title: "🏃 Playtime", time: "11:00 AM", desc: "Played with blocks and made towers" },
+                { title: "🍎 Snack Time", time: "3:00 PM", desc: "Had fruits and juice" }
+            ]},
+            { id: 3, name: "Liam Johnson", activities: [
+                { title: "⚽ Sports", time: "10:00 AM", desc: "Played soccer with the team" },
+                { title: "🔢 Math Time", time: "11:30 AM", desc: "Learned numbers 1-10" },
+                { title: "🎭 Drama Class", time: "2:30 PM", desc: "Performed in class play" }
+            ]}
+        ];
+
+        let current = kids[0];
+
+        window.addEventListener("load", () => {
+            renderKidButtons();
+            renderActivities();
+            renderWeekly();
+        });
+
+        function renderKidButtons() {
+            const sel = document.getElementById("kidSelector");
+            sel.innerHTML = kids.map(k => `<button class="kid-btn ${k.id === current.id ? 'active' : ''}" onclick="selectKid(${k.id})">${k.name}</button>`).join("");
+        }
+
+        function selectKid(id) {
+            current = kids.find(k => k.id === id);
+            renderKidButtons();
+            renderActivities();
+        }
+
+        function renderActivities() {
+            const gal = document.getElementById("gallery");
+            gal.innerHTML = current.activities.map(a => `
+                <div class="activity-item">
+                    <div class="photo">${a.title.split(' ')[0]}</div>
+                    <div class="activity-info">
+                        <h3>${a.title}</h3>
+                        <div class="time">${a.time}</div>
+                        <div class="description">${a.desc}</div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function renderWeekly() {
+            const wgal = document.getElementById("weeklyGallery");
+            wgal.innerHTML = `
+                <div class="activity-item">
+                    <div class="photo">🎉</div>
+                    <div class="activity-info">
+                        <h3>Best Week Ever!</h3>
+                        <div class="time">This Week</div>
+                        <div class="description">${current.name} had an amazing week with great progress!</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="photo">⭐</div>
+                    <div class="activity-info">
+                        <h3>Star Student</h3>
+                        <div class="time">Recognized</div>
+                        <div class="description">Excellent behavior and participation in class</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function logout() {
+            if (confirm("Logout?")) {
+                localStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

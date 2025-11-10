@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health - KidSync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 2rem; }
+        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 0.3rem; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); }
+        .main { margin-left: 220px; flex: 1; padding: 0; }
+        .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .navbar img { width: 100px; }
+        .content { padding: 2rem; }
+        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header h1 { color: #1e40af; font-size: 1.6rem; }
+        .kid-selector { margin: 1rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .kid-btn { padding: 0.7rem 1.2rem; background: #f0f9ff; border: 2px solid #2563eb; color: #2563eb; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .kid-btn.active { background: #2563eb; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .card h3 { color: #1e40af; margin-bottom: 1rem; font-size: 1.1rem; }
+        .meal-item { background: #f8fafc; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #f97316; }
+        .meal-item strong { color: #f97316; }
+        .meal-item span { color: #666; font-size: 0.9rem; }
+        .progress-bar { width: 100%; height: 10px; background: #e5e7eb; border-radius: 5px; margin: 0.5rem 0; overflow: hidden; }
+        .progress { height: 100%; background: linear-gradient(90deg, #2563eb, #f97316); }
+        .stat-box { background: linear-gradient(135deg, #dbeafe, #fed7aa); padding: 1.2rem; border-radius: 8px; text-align: center; }
+        .stat-box .val { font-size: 2rem; font-weight: bold; color: #1e40af; }
+        .stat-box .lbl { color: #666; margin-top: 0.5rem; }
+        .alert { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; color: #92400e; }
+        .section-title { color: #1e40af; font-size: 1.3rem; margin: 1.5rem 0 1rem; font-weight: 600; }
+        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menu</h3>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="activities.html">📖 Activities</a>
+            <a href="health.html" style="background: rgba(255,255,255,0.15);">🍎 Health</a>
+            <a href="milestones.html">⭐ Milestones</a>
+            <a href="calendar.html">📅 Calendar</a>
+            <a href="settings.html">⚙️ Settings</a>
+            <button class="logout" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="main">
+            <div class="navbar">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+            </div>
+
+            <div class="content">
+                <div class="header">
+                    <h1>🍎 Health & Wellness</h1>
+                    <div class="kid-selector" id="kidSelector"></div>
+                </div>
+
+                <h2 class="section-title">Daily Nutrition</h2>
+                <div class="grid" id="mealsGrid"></div>
+
+                <h2 class="section-title">Health Status</h2>
+                <div class="grid" id="healthGrid"></div>
+
+                <div class="alert" id="alerts"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const kids = [
+            { id: 1, name: "Daudi Okelo", meals: { breakfast: "Porridge, Fruit, Milk", lunch: "Rice, Beef, Veggies", snack: "Cookies, Juice" }, hydration: 6, sleep: 9.5, mood: "Happy", allergies: "None" },
+            { id: 2, name: "Zainab Ahmed", meals: { breakfast: "Eggs, Toast, Juice", lunch: "Pasta, Chicken, Salad", snack: "Apple, Water" }, hydration: 5, sleep: 8.5, mood: "Energetic", allergies: "Peanuts" },
+            { id: 3, name: "Liam Johnson", meals: { breakfast: "Cereals, Milk, Fruit", lunch: "Burger, Fries, Drink", snack: "Yogurt, Granola" }, hydration: 7, sleep: 9, mood: "Playful", allergies: "None" }
+        ];
+
+        let current = kids[0];
+
+        window.addEventListener("load", () => {
+            renderKids();
+            renderMeals();
+            renderHealth();
+            renderAlerts();
+        });
+
+        function renderKids() {
+            const sel = document.getElementById("kidSelector");
+            sel.innerHTML = kids.map(k => `<button class="kid-btn ${k.id === current.id ? 'active' : ''}" onclick="selectKid(${k.id})">${k.name}</button>`).join("");
+        }
+
+        function selectKid(id) {
+            current = kids.find(k => k.id === id);
+            renderKids();
+            renderMeals();
+            renderHealth();
+            renderAlerts();
+        }
+
+        function renderMeals() {
+            const grid = document.getElementById("mealsGrid");
+            grid.innerHTML = `
+                <div class="card">
+                    <h3>🍳 Breakfast</h3>
+                    <div class="meal-item"><strong>Menu:</strong> <span>${current.meals.breakfast}</span></div>
+                    <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
+                    <span style="font-size: 0.85rem; color: #666;">Finished</span>
+                </div>
+                <div class="card">
+                    <h3>🍽️ Lunch</h3>
+                    <div class="meal-item"><strong>Menu:</strong> <span>${current.meals.lunch}</span></div>
+                    <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
+                    <span style="font-size: 0.85rem; color: #666;">Finished</span>
+                </div>
+                <div class="card">
+                    <h3>🍪 Snack</h3>
+                    <div class="meal-item"><strong>Menu:</strong> <span>${current.meals.snack}</span></div>
+                    <div class="progress-bar"><div class="progress" style="width: 75%;"></div></div>
+                    <span style="font-size: 0.85rem; color: #666;">75% complete</span>
+                </div>
+            `;
+        }
+
+        function renderHealth() {
+            const grid = document.getElementById("healthGrid");
+            grid.innerHTML = `
+                <div class="card">
+                    <h3>💧 Hydration</h3>
+                    <div class="stat-box">
+                        <div class="val">${current.hydration}</div>
+                        <div class="lbl">Cups of Water</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>😴 Sleep</h3>
+                    <div class="stat-box">
+                        <div class="val">${current.sleep}h</div>
+                        <div class="lbl">Hours Last Night</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>😊 Mood</h3>
+                    <div class="stat-box">
+                        <div class="val">${current.mood}</div>
+                        <div class="lbl">Today's Mood</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAlerts() {
+            const alerts = document.getElementById("alerts");
+            if (current.allergies !== "None") {
+                alerts.innerHTML = `⚠️ <strong>Allergies:</strong> ${current.allergies}`;
+            } else {
+                alerts.innerHTML = `✅ No known allergies`;
+            }
+        }
+
+        function logout() {
+            if (confirm("Logout?")) {
+                localStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>
