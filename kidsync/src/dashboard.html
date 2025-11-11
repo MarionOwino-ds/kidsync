@@ -73,20 +73,20 @@
             <h3>Menu</h3>
             <div class="nav-section">
                 <div class="nav-section-title">Main</div>
-                <a href="#">📊 Dashboard</a>
-                <a href="#">📍 Tracking</a>
-                <a href="#">📖 Activities</a>
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="activities.html">📖 Activities</a>
+                <a href="health.html">🍎 Health</a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Info</div>
-                <a href="#">🍎 Health</a>
-                <a href="#">⭐ Milestones</a>
-                <a href="#">💬 Messages</a>
+                <a href="milestones.html">⭐ Milestones</a>
+                <a href="calender.html">📅 Calendar</a>
+                <a href="location.html">📍 Location</a>
             </div>
             <div class="nav-section">
-                <div class="nav-section-title">Settings</div>
-                <a href="#">📅 Calendar</a>
-                <a href="#">⚙️ Settings</a>
+                <div class="nav-section-title">Account</div>
+                <a href="profile.html">👤 Profile</a>
+                <a href="settings.html">⚙️ Settings</a>
             </div>
             <button class="logout" onclick="logout()">🚪 Logout</button>
         </div>
@@ -144,8 +144,9 @@
         </div>
     </div>
 
+    <script src="app.js"></script>
     <script>
-        const kids = [
+        let kids = [
             { id: 1, name: "Daudi Okelo", age: 5, grade: "Grade 1", emoji: "🧒", status: "at-school", bus: "At School", loc: "Nairobi Primary School", time: "8:45 AM", lat: "-1.2965", lon: "36.7965", speed: "0 km/h", meals: "2 of 3", msgs: 3, activity: [{time: "8:15 AM", e: "Boarded Bus"}, {time: "8:45 AM", e: "Arrived at School"}, {time: "9:00 AM", e: "🍽️ Breakfast"}, {time: "10:30 AM", e: "🎨 Art Activity"}, {time: "12:30 PM", e: "🍽️ Lunch"}] },
             { id: 2, name: "Zainab Ahmed", age: 4, grade: "Pre-K", emoji: "👧", status: "on-bus", bus: "On Bus", loc: "Heading to School", time: "8:30 AM", lat: "-1.2900", lon: "36.7850", speed: "45 km/h", meals: "1 of 3", msgs: 1, activity: [{time: "8:00 AM", e: "Boarded Bus"}, {time: "8:30 AM", e: "🚌 In transit - 5 mins away"}] },
             { id: 3, name: "Liam Johnson", age: 6, grade: "Grade 2", emoji: "👦", status: "home", bus: "Picked Up", loc: "Home", time: "3:45 PM", lat: "-1.3050", lon: "36.8100", speed: "0 km/h", meals: "3 of 3", msgs: 5, activity: [{time: "3:15 PM", e: "Left School"}, {time: "3:45 PM", e: "✅ Alighted Safely"}] }
@@ -178,8 +179,8 @@
                         <div class="stat"><div class="val">${k.msgs}</div><div class="lbl">Messages</div></div>
                     </div>
                     <div class="actions">
-                        <button class="btn btn-primary" onclick="selectKid(${k.id})">View</button>
-                        <button class="btn btn-secondary">📍 Track</button>
+                        <button class="btn btn-primary" onclick="viewKidDashboard(${k.id})">View</button>
+                        <button class="btn btn-secondary" onclick="openLocation(${k.id})">📍 Track</button>
                     </div>
                 </div>
             `).join("");
@@ -196,6 +197,9 @@
             document.getElementById("busStatus").textContent = current.bus;
             document.getElementById("locationName").textContent = current.loc;
             document.getElementById("locationTime").textContent = current.time;
+            document.getElementById("latitude").textContent = current.lat;
+            document.getElementById("longitude").textContent = current.lon;
+            document.getElementById("speed").textContent = current.speed;
         }
 
         function updateActivity() {
@@ -224,6 +228,16 @@
 
         function openMessages() {
             alert("Opening Messages for " + current.name);
+        }
+
+        function viewKidDashboard(kidId) {
+            localStorage.setItem('selectedKidId', kidId);
+            window.location.href = 'kid-dashboard.html';
+        }
+
+        function openLocation(kidId) {
+            localStorage.setItem('selectedKidId', kidId);
+            window.location.href = 'location.html';
         }
     </script>
 </body>
