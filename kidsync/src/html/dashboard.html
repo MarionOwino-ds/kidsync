@@ -24,7 +24,7 @@
         .avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .section-title { color: #1e40af; font-size: 1.3rem; margin: 1.5rem 0 1rem; font-weight: 600; }
         .kids-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-        .kid-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #f97316; transition: 0.3s; height: 100%; }
+        .kid-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #f97316; transition: 0.3s; height: 100%; cursor: pointer; }
         .kid-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
         .kid-card.active { border-left-color: #2563eb; background: #f0f9ff; }
         .kid-header { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
@@ -80,7 +80,7 @@
             <div class="nav-section">
                 <div class="nav-section-title">Info</div>
                 <a href="milestones.html">⭐ Milestones</a>
-                <a href="calender.html">📅 Calendar</a>
+                <a href="calendar.html">📅 Calendar</a>
                 <a href="location.html">📍 Location</a>
             </div>
             <div class="nav-section">
@@ -140,7 +140,8 @@
             </div>
         </div>
     </div>
-    <script src="js/common.js"></script>
-    <script src="js/dashboard.js"></script>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/dashboard.js"></script>
 </body>
 </html>
