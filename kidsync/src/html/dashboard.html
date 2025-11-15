@@ -98,10 +98,10 @@
 
             <div class="content">
                 <div class="header">
-                    <h1>Welcome, <span id="userName">Sarah</span> 👋</h1>
+                    <h1>Welcome, <span id="userName"></span> 👋</h1>
                     <div style="display: flex; gap: 2rem; align-items: center;">
                         <button style="background: #2563eb; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; transition: 0.3s;" onclick="openMessages()" title="Messages">💬</button>
-                        <div class="avatar" id="avatar">SJ</div>
+                        <div class="avatar" id="avatar"></div>
                     </div>
                 </div>
 
@@ -116,12 +116,12 @@
                     <div class="feature-card">
                         <h3>📍 Live Location Tracking</h3>
                         <div class="location-info">
-                            <div class="loc-line">🚌 <strong>Status:</strong> <span id="busStatus">At School</span></div>
-                            <div class="loc-line">📍 <strong>Location:</strong> <span id="locationName">Nairobi Primary School</span></div>
-                            <div class="loc-line">🕐 <strong>Last Updated:</strong> <span id="locationTime">8:45 AM</span></div>
-                            <div class="loc-line">📌 <strong>Latitude:</strong> <span id="latitude">-1.2965</span></div>
-                            <div class="loc-line">📌 <strong>Longitude:</strong> <span id="longitude">36.7965</span></div>
-                            <div class="loc-line">🚗 <strong>Speed:</strong> <span id="speed">0 km/h</span></div>
+                            <div class="loc-line">🚌 <strong>Status:</strong> <span id="busStatus"></span></div>
+                            <div class="loc-line">📍 <strong>Location:</strong> <span id="locationName"></span></div>
+                            <div class="loc-line">🕐 <strong>Last Updated:</strong> <span id="locationTime"></span></div>
+                            <div class="loc-line">📌 <strong>Latitude:</strong> <span id="latitude"></span></div>
+                            <div class="loc-line">📌 <strong>Longitude:</strong> <span id="longitude"></span></div>
+                            <div class="loc-line">🚗 <strong>Speed:</strong> <span id="speed"></span></div>
                         </div>
                         <div class="map">📍 Map Integration Ready</div>
                     </div>
@@ -129,10 +129,7 @@
                     <div class="feature-card">
                         <h3>💬 Teacher Messages</h3>
                         <div class="messages">
-                            <div class="msg-list" id="msgList">
-                                <div class="msg msg-teacher"><strong>Teacher:</strong> Good morning! All is well</div>
-                                <div class="msg msg-parent"><strong>You:</strong> Thanks for update</div>
-                            </div>
+                            <div class="msg-list" id="msgList"></div>
                             <div class="msg-input">
                                 <input type="text" id="msgInput" placeholder="Type message...">
                                 <button onclick="sendMsg()">Send</button>
@@ -143,102 +140,7 @@
             </div>
         </div>
     </div>
-
-    <script src="app.js"></script>
-    <script>
-        let kids = [
-            { id: 1, name: "Daudi Okelo", age: 5, grade: "Grade 1", emoji: "🧒", status: "at-school", bus: "At School", loc: "Nairobi Primary School", time: "8:45 AM", lat: "-1.2965", lon: "36.7965", speed: "0 km/h", meals: "2 of 3", msgs: 3, activity: [{time: "8:15 AM", e: "Boarded Bus"}, {time: "8:45 AM", e: "Arrived at School"}, {time: "9:00 AM", e: "🍽️ Breakfast"}, {time: "10:30 AM", e: "🎨 Art Activity"}, {time: "12:30 PM", e: "🍽️ Lunch"}] },
-            { id: 2, name: "Zainab Ahmed", age: 4, grade: "Pre-K", emoji: "👧", status: "on-bus", bus: "On Bus", loc: "Heading to School", time: "8:30 AM", lat: "-1.2900", lon: "36.7850", speed: "45 km/h", meals: "1 of 3", msgs: 1, activity: [{time: "8:00 AM", e: "Boarded Bus"}, {time: "8:30 AM", e: "🚌 In transit - 5 mins away"}] },
-            { id: 3, name: "Liam Johnson", age: 6, grade: "Grade 2", emoji: "👦", status: "home", bus: "Picked Up", loc: "Home", time: "3:45 PM", lat: "-1.3050", lon: "36.8100", speed: "0 km/h", meals: "3 of 3", msgs: 5, activity: [{time: "3:15 PM", e: "Left School"}, {time: "3:45 PM", e: "✅ Alighted Safely"}] }
-        ];
-        let current = kids[0];
-
-        window.addEventListener("load", () => {
-            const user = localStorage.getItem("userName") || "Sarah Johnson";
-            document.getElementById("userName").textContent = user.split(" ")[0];
-            document.getElementById("avatar").textContent = user.split(" ").map(n => n[0]).join("");
-            renderKids();
-            updateLoc();
-            updateActivity();
-        });
-
-        function renderKids() {
-            const grid = document.getElementById("kidsGrid");
-            grid.innerHTML = kids.map(k => `
-                <div class="kid-card ${k.id === current.id ? "active" : ""}" onclick="selectKid(${k.id})">
-                    <div class="kid-header">
-                        <div class="kid-avatar">${k.emoji}</div>
-                        <div class="kid-info">
-                            <h3>${k.name}</h3>
-                            <p>${k.age} yrs • ${k.grade}</p>
-                        </div>
-                    </div>
-                    <div class="status-badge status-${k.status}">${k.bus}</div>
-                    <div class="quick-stats">
-                        <div class="stat"><div class="val">${k.meals}</div><div class="lbl">Meals</div></div>
-                        <div class="stat"><div class="val">${k.msgs}</div><div class="lbl">Messages</div></div>
-                    </div>
-                    <div class="actions">
-                        <button class="btn btn-primary" onclick="viewKidDashboard(${k.id})">View</button>
-                        <button class="btn btn-secondary" onclick="openLocation(${k.id})">📍 Track</button>
-                    </div>
-                </div>
-            `).join("");
-        }
-
-        function selectKid(id) {
-            current = kids.find(k => k.id === id);
-            updateLoc();
-            updateActivity();
-            renderKids();
-        }
-
-        function updateLoc() {
-            document.getElementById("busStatus").textContent = current.bus;
-            document.getElementById("locationName").textContent = current.loc;
-            document.getElementById("locationTime").textContent = current.time;
-            document.getElementById("latitude").textContent = current.lat;
-            document.getElementById("longitude").textContent = current.lon;
-            document.getElementById("speed").textContent = current.speed;
-        }
-
-        function updateActivity() {
-            const feed = document.getElementById("activityFeed");
-            feed.innerHTML = current.activity.map(a => `<div class="activity-item"><div class="time">${a.time}</div><div class="event">${a.e}</div></div>`).join("");
-        }
-
-        function sendMsg() {
-            const inp = document.getElementById("msgInput");
-            if (!inp.value.trim()) return;
-            const list = document.getElementById("msgList");
-            const div = document.createElement("div");
-            div.className = "msg msg-parent";
-            div.innerHTML = `<strong>You:</strong> ${inp.value}`;
-            list.appendChild(div);
-            list.scrollTop = list.scrollHeight;
-            inp.value = "";
-        }
-
-        function logout() {
-            if (confirm("Logout?")) {
-                localStorage.clear();
-                window.location.href = "login.html";
-            }
-        }
-
-        function openMessages() {
-            alert("Opening Messages for " + current.name);
-        }
-
-        function viewKidDashboard(kidId) {
-            localStorage.setItem('selectedKidId', kidId);
-            window.location.href = 'kid-dashboard.html';
-        }
-
-        function openLocation(kidId) {
-            localStorage.setItem('selectedKidId', kidId);
-            window.location.href = 'location.html';
-        }
-    </script>
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>

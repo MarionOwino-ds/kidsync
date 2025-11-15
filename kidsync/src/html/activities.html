@@ -35,6 +35,7 @@
         @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .gallery { grid-template-columns: 1fr; } }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="sidebar">
@@ -50,7 +51,7 @@
 
         <div class="main">
             <div class="navbar">
-                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync Logo">
             </div>
 
             <div class="content">
@@ -68,86 +69,14 @@
         </div>
     </div>
 
-    <script>
-        const kids = [
-            { id: 1, name: "Daudi Okelo", activities: [
-                { title: "🎨 Art Time", time: "10:30 AM", desc: "Created beautiful colorful painting with friends" },
-                { title: "🍽️ Lunch", time: "12:30 PM", desc: "Enjoyed rice and vegetables, had seconds!" },
-                { title: "📚 Story Time", time: "2:00 PM", desc: "Listened to amazing adventure story" }
-            ]},
-            { id: 2, name: "Zainab Ahmed", activities: [
-                { title: "🎵 Music Class", time: "9:30 AM", desc: "Learned new songs and danced" },
-                { title: "🏃 Playtime", time: "11:00 AM", desc: "Played with blocks and made towers" },
-                { title: "🍎 Snack Time", time: "3:00 PM", desc: "Had fruits and juice" }
-            ]},
-            { id: 3, name: "Liam Johnson", activities: [
-                { title: "⚽ Sports", time: "10:00 AM", desc: "Played soccer with the team" },
-                { title: "🔢 Math Time", time: "11:30 AM", desc: "Learned numbers 1-10" },
-                { title: "🎭 Drama Class", time: "2:30 PM", desc: "Performed in class play" }
-            ]}
-        ];
 
-        let current = kids[0];
+    <script src="../js/common.js"></script>
+<script src="../js/activities.js"></script>
 
-        window.addEventListener("load", () => {
-            renderKidButtons();
-            renderActivities();
-            renderWeekly();
-        });
+    
+    
 
-        function renderKidButtons() {
-            const sel = document.getElementById("kidSelector");
-            sel.innerHTML = kids.map(k => `<button class="kid-btn ${k.id === current.id ? 'active' : ''}" onclick="selectKid(${k.id})">${k.name}</button>`).join("");
-        }
-
-        function selectKid(id) {
-            current = kids.find(k => k.id === id);
-            renderKidButtons();
-            renderActivities();
-        }
-
-        function renderActivities() {
-            const gal = document.getElementById("gallery");
-            gal.innerHTML = current.activities.map(a => `
-                <div class="activity-item">
-                    <div class="photo">${a.title.split(' ')[0]}</div>
-                    <div class="activity-info">
-                        <h3>${a.title}</h3>
-                        <div class="time">${a.time}</div>
-                        <div class="description">${a.desc}</div>
-                    </div>
-                </div>
-            `).join("");
-        }
-
-        function renderWeekly() {
-            const wgal = document.getElementById("weeklyGallery");
-            wgal.innerHTML = `
-                <div class="activity-item">
-                    <div class="photo">🎉</div>
-                    <div class="activity-info">
-                        <h3>Best Week Ever!</h3>
-                        <div class="time">This Week</div>
-                        <div class="description">${current.name} had an amazing week with great progress!</div>
-                    </div>
-                </div>
-                <div class="activity-item">
-                    <div class="photo">⭐</div>
-                    <div class="activity-info">
-                        <h3>Star Student</h3>
-                        <div class="time">Recognized</div>
-                        <div class="description">Excellent behavior and participation in class</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function logout() {
-            if (confirm("Logout?")) {
-                localStorage.clear();
-                window.location.href = "login.html";
-            }
-        }
-    </script>
+    
+   
 </body>
 </html>

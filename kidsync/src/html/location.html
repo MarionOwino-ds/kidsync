@@ -1,172 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Location - KidSync</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
-        .container { display: flex; min-height: 100vh; }
-        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
-        .sidebar h3 { margin-bottom: 2rem; }
-        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 0.3rem; transition: 0.3s; }
-        .sidebar a:hover { background: rgba(255,255,255,0.15); }
-        .main { margin-left: 220px; flex: 1; padding: 0; }
-        .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .navbar img { width: 100px; }
-        .content { padding: 2rem; }
-        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .header h1 { color: #1e40af; font-size: 1.6rem; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .card h3 { color: #1e40af; margin-bottom: 1.2rem; }
-        .map { width: 100%; height: 400px; background: linear-gradient(135deg, #dbeafe, #fed7aa); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 1rem; }
-        .loc-data { background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #2563eb; }
-        .loc-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #e5e7eb; }
-        .loc-row:last-child { border-bottom: none; }
-        .loc-label { color: #1e40af; font-weight: 600; }
-        .loc-value { color: #666; }
-        .status-badge { display: inline-block; padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 600; margin-bottom: 1rem; }
-        .status-at-school { background: #d1fae5; color: #065f46; }
-        .status-on-bus { background: #fef3c7; color: #92400e; }
-        .status-home { background: #dbeafe; color: #1e40af; }
-        .refresh-btn { background: #f97316; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .refresh-btn:hover { background: #ea580c; }
-        .history { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .history-item { padding: 0.8rem; border-bottom: 1px solid #e5e7eb; font-size: 0.9rem; }
-        .history-item:last-child { border-bottom: none; }
-        .history-time { color: #f97316; font-weight: 600; }
-        .history-info { color: #666; }
-        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
-        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .grid { grid-template-columns: 1fr; } .map { height: 250px; } }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #f8fafc;
+      }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 220px;
+        background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%);
+        color: white;
+        padding: 1.5rem 1rem;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+      }
+      .sidebar h3 {
+        margin-bottom: 2rem;
+      }
+      .sidebar a {
+        display: block;
+        padding: 0.8rem 1rem;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-bottom: 0.3rem;
+        transition: 0.3s;
+      }
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .main {
+        margin-left: 220px;
+        flex: 1;
+        padding: 0;
+      }
+      .navbar {
+        background: white;
+        padding: 1.2rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .navbar img {
+        width: 100px;
+      }
+      .content {
+        padding: 2rem;
+      }
+      .header {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header h1 {
+        color: #1e40af;
+        font-size: 1.6rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .map {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, #dbeafe, #fed7aa);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+      .loc-data {
+        background: #f0f9ff;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #2563eb;
+      }
+      .loc-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .loc-row:last-child {
+        border-bottom: none;
+      }
+      .loc-label {
+        color: #1e40af;
+        font-weight: 600;
+      }
+      .loc-value {
+        color: #666;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .status-at-school {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .status-on-bus {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .status-home {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .refresh-btn {
+        background: #f97316;
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .refresh-btn:hover {
+        background: #ea580c;
+      }
+      .history {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+      .history-item {
+        padding: 0.8rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 0.9rem;
+      }
+      .history-item:last-child {
+        border-bottom: none;
+      }
+      .history-time {
+        color: #f97316;
+        font-weight: 600;
+      }
+      .history-info {
+        color: #666;
+      }
+      .logout {
+        width: 100%;
+        padding: 0.7rem;
+        margin-top: auto;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          position: relative;
+          height: auto;
+        }
+        .main {
+          margin-left: 0;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .map {
+          height: 250px;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="sidebar">
-            <h3>Menu</h3>
-            <a href="dashboard.html">📊 Dashboard</a>
-            <a href="activities.html">📖 Activities</a>
-            <a href="health.html">🍎 Health</a>
-            <a href="milestones.html">⭐ Milestones</a>
-            <a href="calender.html">📅 Calendar</a>
-            <a href="location.html" style="background: rgba(255,255,255,0.15);">📍 Location</a>
-            <a href="profile.html">👤 Profile</a>
-            <a href="settings.html">⚙️ Settings</a>
-            <button class="logout" onclick="logout()">🚪 Logout</button>
+      <div class="sidebar">
+        <h3>Menu</h3>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="activities.html">📖 Activities</a>
+        <a href="health.html">🍎 Health</a>
+        <a href="milestones.html">⭐ Milestones</a>
+        <a href="calender.html">📅 Calendar</a>
+        <a href="location.html" style="background: rgba(255, 255, 255, 0.15)"
+          >📍 Location</a
+        >
+        <a href="profile.html">👤 Profile</a>
+        <a href="settings.html">⚙️ Settings</a>
+        <button class="logout" onclick="logout()">🚪 Logout</button>
+      </div>
+
+      <div class="main">
+        <div class="navbar">
+          <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync" />
         </div>
 
-        <div class="main">
-            <div class="navbar">
-                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync">
+        <div class="content">
+          <div class="header">
+            <h1>📍 Live Location Tracking</h1>
+            <p id="kidName" style="color: #666; margin-top: 0.5rem">
+              Loading...
+            </p>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <h3>🗺️ Live Map</h3>
+              <div class="map">📍</div>
+              <p style="color: #666; text-align: center; font-size: 0.9rem">
+                Map integration ready for Google Maps / Mapbox APIs
+              </p>
             </div>
 
-            <div class="content">
-                <div class="header">
-                    <h1>📍 Live Location Tracking</h1>
-                    <p id="kidName" style="color: #666; margin-top: 0.5rem;">Loading...</p>
-                </div>
-
-                <div class="grid">
-                    <div class="card">
-                        <h3>🗺️ Live Map</h3>
-                        <div class="map">📍</div>
-                        <p style="color: #666; text-align: center; font-size: 0.9rem;">Map integration ready for Google Maps / Mapbox APIs</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>📍 GPS Location Data</h3>
-                        <div class="status-badge" id="statusBadge">Loading...</div>
-                        <div class="loc-data" id="locData"></div>
-                        <button class="refresh-btn" onclick="refreshLocation()" style="width: 100%; margin-top: 1rem;">🔄 Refresh Location</button>
-                    </div>
-                </div>
-
-                <div class="history" style="margin-top: 2rem;">
-                    <h3 style="color: #1e40af; margin-bottom: 1rem;">📊 Location History</h3>
-                    <div id="historyList"></div>
-                </div>
+            <div class="card">
+              <h3>📍 GPS Location Data</h3>
+              <div class="status-badge" id="statusBadge">Loading...</div>
+              <div class="loc-data" id="locData"></div>
+              <button
+                class="refresh-btn"
+                onclick="refreshLocation()"
+                style="width: 100%; margin-top: 1rem"
+              >
+                🔄 Refresh Location
+              </button>
             </div>
+          </div>
+
+          <div class="history">
+            <h3 style="color: #1e40af; margin-bottom: 1rem">
+              📊 Location History
+            </h3>
+            <div id="historyList"></div>
+          </div>
         </div>
+      </div>
     </div>
 
-    <script>
-        const kids = [
-            { id: 1, name: "Daudi Okelo", status: "at-school", lat: "-1.2965", lon: "36.7965", speed: "0 km/h", address: "Nairobi Primary School", time: "8:45 AM" },
-            { id: 2, name: "Zainab Ahmed", status: "on-bus", lat: "-1.2900", lon: "36.7850", speed: "45 km/h", address: "Heading to School", time: "8:30 AM" },
-            { id: 3, name: "Liam Johnson", status: "home", lat: "-1.3050", lon: "36.8100", speed: "0 km/h", address: "Home", time: "3:45 PM" }
-        ];
-
-        const history = [
-            { time: "8:45 AM", lat: "-1.2965", lon: "36.7965", location: "Nairobi Primary School" },
-            { time: "8:30 AM", lat: "-1.2970", lon: "36.7960", location: "School Gate" },
-            { time: "8:15 AM", lat: "-1.2980", lon: "36.7955", location: "On School Road" },
-            { time: "8:00 AM", lat: "-1.3000", lon: "36.7900", location: "Left Home" }
-        ];
-
-        window.addEventListener("load", () => {
-            const kidId = localStorage.getItem('selectedKidId') || 1;
-            const kid = kids.find(k => k.id == kidId);
-            if (kid) displayKidLocation(kid);
-            displayHistory();
-        });
-
-        function displayKidLocation(kid) {
-            document.getElementById("kidName").textContent = `Tracking: ${kid.name}`;
-            document.getElementById("statusBadge").className = `status-badge status-${kid.status}`;
-            document.getElementById("statusBadge").textContent = kid.status.toUpperCase().replace('-', ' ');
-            
-            const locHtml = `
-                <div class="loc-row">
-                    <span class="loc-label">🚌 Status:</span>
-                    <span class="loc-value">${kid.status === 'on-bus' ? 'On Bus' : kid.status === 'at-school' ? 'At School' : 'Home'}</span>
-                </div>
-                <div class="loc-row">
-                    <span class="loc-label">📍 Latitude:</span>
-                    <span class="loc-value">${kid.lat}</span>
-                </div>
-                <div class="loc-row">
-                    <span class="loc-label">📍 Longitude:</span>
-                    <span class="loc-value">${kid.lon}</span>
-                </div>
-                <div class="loc-row">
-                    <span class="loc-label">📍 Address:</span>
-                    <span class="loc-value">${kid.address}</span>
-                </div>
-                <div class="loc-row">
-                    <span class="loc-label">🚗 Speed:</span>
-                    <span class="loc-value">${kid.speed}</span>
-                </div>
-                <div class="loc-row">
-                    <span class="loc-label">🕐 Last Update:</span>
-                    <span class="loc-value">${kid.time}</span>
-                </div>
-            `;
-            document.getElementById("locData").innerHTML = locHtml;
-        }
-
-        function displayHistory() {
-            const historyHtml = history.map(h => `
-                <div class="history-item">
-                    <div class="history-time">${h.time}</div>
-                    <div class="history-info">📍 ${h.location} (${h.lat}, ${h.lon})</div>
-                </div>
-            `).join("");
-            document.getElementById("historyList").innerHTML = historyHtml;
-        }
-
-        function refreshLocation() {
-            alert("Location refreshing... (Connect to real GPS API here)");
-            displayHistory();
-        }
-
-        function logout() {
-            if (confirm("Logout?")) {
-                localStorage.clear();
-                window.location.href = "login.html";
-            }
-        }
-    </script>
-</body>
+    <script src="../js/location.js"></script>
+  </body>
 </html>

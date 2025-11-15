@@ -49,7 +49,7 @@
             <a href="milestones.html">⭐ Milestones</a>
             <a href="calendar.html" style="background: rgba(255,255,255,0.15);">📅 Calendar</a>
             <a href="settings.html">⚙️ Settings</a>
-            <button class="logout" onclick="logout()">🚪 Logout</button>
+            <button class="logout" onclick="window.location.href='login.html'">🚪 Logout</button>
         </div>
 
         <div class="main">
@@ -65,65 +65,26 @@
                 <div class="grid">
                     <div class="calendar">
                         <div class="cal-header">
-                            <button class="nav-btn">← Prev</button>
+                            <button class="nav-btn" id="prevMonth">← Prev</button>
                             <h3 id="monthYear">November 2025</h3>
-                            <button class="nav-btn">Next →</button>
+                            <button class="nav-btn" id="nextMonth">Next →</button>
                         </div>
-                        <div class="days">
-                            <div class="day-name">Sun</div>
-                            <div class="day-name">Mon</div>
-                            <div class="day-name">Tue</div>
-                            <div class="day-name">Wed</div>
-                            <div class="day-name">Thu</div>
-                            <div class="day-name">Fri</div>
-                            <div class="day-name">Sat</div>
-                            <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div>
-                            <div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="day">14</div>
-                            <div class="day">15</div><div class="day event">16</div><div class="day">17</div><div class="day event">18</div><div class="day">19</div><div class="day">20</div><div class="day">21</div>
-                            <div class="day">22</div><div class="day">23</div><div class="day event">24</div><div class="day">25</div><div class="day">26</div><div class="day">27</div><div class="day">28</div>
-                            <div class="day">29</div><div class="day">30</div>
+                        <div class="days" id="daysContainer">
+                            <!-- Days will be filled by calendar.js -->
                         </div>
                     </div>
 
-                    <div class="events">
-                        <h3 style="color: #1e40af; margin-bottom: 1.5rem;">Upcoming Events</h3>
-                        <div class="event-item">
-                            <h4>📚 Parent-Teacher Conference</h4>
-                            <div class="event-date">November 16, 2025 | 3:00 PM</div>
-                            <div class="event-desc">Discuss your child's progress and development</div>
-                            <button class="event-btn attending">✓ Attending</button>
-                        </div>
-                        <div class="event-item">
-                            <h4>🎉 School Field Trip</h4>
-                            <div class="event-date">November 18, 2025 | 9:00 AM</div>
-                            <div class="event-desc">Visit to Nairobi Museum - Bring packed lunch</div>
-                            <button class="event-btn" onclick="rsvp(this)">RSVP</button>
-                        </div>
-                        <div class="event-item">
-                            <h4>🎄 Holiday Celebration</h4>
-                            <div class="event-date">November 24, 2025 | 2:00 PM</div>
-                            <div class="event-desc">End of term party with parents and kids</div>
-                            <button class="event-btn" onclick="rsvp(this)">RSVP</button>
-                        </div>
+                    <div class="events" id="eventsContainer">
+                        <!-- Events will be filled dynamically -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function rsvp(btn) {
-            btn.textContent = "✓ Attending";
-            btn.classList.add("attending");
-            btn.disabled = true;
-        }
+    <!-- LINK JS FILES CORRECTLY -->
+    <script src="../js/common.js"></script>
+    <script src="../js/calendar.js"></script>
 
-        function logout() {
-            if (confirm("Logout?")) {
-                localStorage.clear();
-                window.location.href = "login.html";
-            }
-        }
-    </script>
 </body>
 </html>

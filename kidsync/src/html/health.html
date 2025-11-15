@@ -16,7 +16,7 @@
         .navbar { background: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .navbar img { width: 100px; }
         .content { padding: 2rem; }
-        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; }
         .header h1 { color: #1e40af; font-size: 1.6rem; }
         .kid-selector { margin: 1rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .kid-btn { padding: 0.7rem 1.2rem; background: #f0f9ff; border: 2px solid #2563eb; color: #2563eb; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
@@ -73,101 +73,8 @@
         </div>
     </div>
 
-    <script>
-        const kids = [
-            { id: 1, name: "Daudi Okelo", meals: { breakfast: "Porridge, Fruit, Milk", lunch: "Rice, Beef, Veggies", snack: "Cookies, Juice" }, hydration: 6, sleep: 9.5, mood: "Happy", allergies: "None" },
-            { id: 2, name: "Zainab Ahmed", meals: { breakfast: "Eggs, Toast, Juice", lunch: "Pasta, Chicken, Salad", snack: "Apple, Water" }, hydration: 5, sleep: 8.5, mood: "Energetic", allergies: "Peanuts" },
-            { id: 3, name: "Liam Johnson", meals: { breakfast: "Cereals, Milk, Fruit", lunch: "Burger, Fries, Drink", snack: "Yogurt, Granola" }, hydration: 7, sleep: 9, mood: "Playful", allergies: "None" }
-        ];
+    <script src="../js/common.js"></script>
+<script src="../js/health.js"></script>
 
-        let current = kids[0];
-
-        window.addEventListener("load", () => {
-            renderKids();
-            renderMeals();
-            renderHealth();
-            renderAlerts();
-        });
-
-        function renderKids() {
-            const sel = document.getElementById("kidSelector");
-            sel.innerHTML = kids.map(k => `<button class="kid-btn ${k.id === current.id ? 'active' : ''}" onclick="selectKid(${k.id})">${k.name}</button>`).join("");
-        }
-
-        function selectKid(id) {
-            current = kids.find(k => k.id === id);
-            renderKids();
-            renderMeals();
-            renderHealth();
-            renderAlerts();
-        }
-
-        function renderMeals() {
-            const grid = document.getElementById("mealsGrid");
-            grid.innerHTML = `
-                <div class="card">
-                    <h3>🍳 Breakfast</h3>
-                    <div class="meal-item"><strong>Menu:</strong> <span>${current.meals.breakfast}</span></div>
-                    <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
-                    <span style="font-size: 0.85rem; color: #666;">Finished</span>
-                </div>
-                <div class="card">
-                    <h3>🍽️ Lunch</h3>
-                    <div class="meal-item"><strong>Menu:</strong> <span>${current.meals.lunch}</span></div>
-                    <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
-                    <span style="font-size: 0.85rem; color: #666;">Finished</span>
-                </div>
-                <div class="card">
-                    <h3>🍪 Snack</h3>
-                    <div class="meal-item"><strong>Menu:</strong> <span>${current.meals.snack}</span></div>
-                    <div class="progress-bar"><div class="progress" style="width: 75%;"></div></div>
-                    <span style="font-size: 0.85rem; color: #666;">75% complete</span>
-                </div>
-            `;
-        }
-
-        function renderHealth() {
-            const grid = document.getElementById("healthGrid");
-            grid.innerHTML = `
-                <div class="card">
-                    <h3>💧 Hydration</h3>
-                    <div class="stat-box">
-                        <div class="val">${current.hydration}</div>
-                        <div class="lbl">Cups of Water</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>😴 Sleep</h3>
-                    <div class="stat-box">
-                        <div class="val">${current.sleep}h</div>
-                        <div class="lbl">Hours Last Night</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>😊 Mood</h3>
-                    <div class="stat-box">
-                        <div class="val">${current.mood}</div>
-                        <div class="lbl">Today's Mood</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderAlerts() {
-            const alerts = document.getElementById("alerts");
-            if (current.allergies !== "None") {
-                alerts.innerHTML = `⚠️ <strong>Allergies:</strong> ${current.allergies}`;
-            } else {
-                alerts.innerHTML = `✅ No known allergies`;
-            }
-        }
-
-        function logout() {
-            if (confirm("Logout?")) {
-                localStorage.clear();
-                window.location.href = "login.html";
-            }
-        }
-    </script>
 </body>
 </html>
