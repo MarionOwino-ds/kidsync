@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KidSync - Complete Kids Tracking Platform</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+      }
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      .card-icon {
+        font-size: 4rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .card h2 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+      }
+      .card p {
+        color: #666;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+      .card-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .btn {
+        display: block;
+        padding: 0.9rem 1.5rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .btn:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+      .btn-secondary {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+      .btn-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+      .btn-info {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+      }
+      .features {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+      .features h3 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+      .feature-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+      .feature-item strong {
+        color: #667eea;
+      }
+      .credentials {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+      .credentials h3 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+      }
+      .cred-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .cred-box {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 2px solid #667eea;
+      }
+      .cred-box h4 {
+        color: #667eea;
+        margin-bottom: 0.8rem;
+        font-size: 1.2rem;
+      }
+      .cred-box p {
+        margin: 0.3rem 0;
+        color: #555;
+      }
+      .cred-box code {
+        background: #1e293b;
+        color: #10b981;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+      .footer {
+        text-align: center;
+        color: white;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      .status-badge {
+        display: inline-block;
+        background: #10b981;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        font-weight: 600;
+        margin: 1rem 0;
+      }
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 KidSync Platform</h1>
+        <p>Complete Kids Tracking & Management System</p>
+        <div class="status-badge">✅ Fully Functional & Ready to Use</div>
+      </div>
+
+      <div class="cards">
+        <!-- Parent Portal Card -->
+        <div class="card">
+          <div class="card-icon">👨‍👩‍👧‍👦</div>
+          <h2>Parent Portal</h2>
+          <p>
+            Monitor your children's location, activities, health, and academic
+            progress in real-time. Communicate with teachers instantly.
+          </p>
+          <div class="card-links">
+            <a href="src/html/index.html" class="btn">🏠 Home Page</a>
+            <a href="src/html/login.html" class="btn">🔐 Login</a>
+            <a href="src/html/signup.html" class="btn">📝 Register</a>
+            <a href="src/html/dashboard.html" class="btn">📊 Dashboard</a>
+          </div>
+        </div>
+
+        <!-- Teacher Portal Card -->
+        <div class="card">
+          <div class="card-icon">👨‍🏫</div>
+          <h2>Teacher Portal</h2>
+          <p>
+            Manage students, enter grades, mark attendance, generate report
+            cards, and communicate with parents effectively.
+          </p>
+          <div class="card-links">
+            <a href="teacher-portal/login.html" class="btn btn-secondary"
+              >🔐 Teacher Login</a
+            >
+            <a href="teacher-portal/dashboard.html" class="btn btn-secondary"
+              >📊 Dashboard</a
+            >
+          </div>
+        </div>
+
+        <!-- Child Device Card -->
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h2>Child Device Simulator</h2>
+          <p>
+            Simulates a child's mobile device with GPS tracking, activity
+            logging, and real-time status updates.
+          </p>
+          <div class="card-links">
+            <a href="child-device/index.html?child_id=1" class="btn btn-warning"
+              >📍 Open Device</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="features">
+        <h3>✨ Key Features</h3>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <strong>📍 GPS Tracking</strong><br />
+            Real-time location updates every 30 seconds
+          </div>
+          <div class="feature-item">
+            <strong>📋 Activities</strong><br />
+            Daily activity logs and timeline
+          </div>
+          <div class="feature-item">
+            <strong>💬 Messaging</strong><br />
+            Live parent-teacher communication
+          </div>
+          <div class="feature-item">
+            <strong>📝 Grades</strong><br />
+            Academic records and marks management
+          </div>
+          <div class="feature-item">
+            <strong>📄 Report Cards</strong><br />
+            Automated report card generation
+          </div>
+          <div class="feature-item">
+            <strong>📅 Attendance</strong><br />
+            Daily attendance tracking system
+          </div>
+          <div class="feature-item">
+            <strong>🏥 Health</strong><br />
+            Health and meal monitoring
+          </div>
+          <div class="feature-item">
+            <strong>🏆 Milestones</strong><br />
+            Achievement tracking and badges
+          </div>
+        </div>
+      </div>
+
+      <div class="credentials">
+        <h3>🔑 Demo Accounts</h3>
+        <div class="cred-grid">
+          <div class="cred-box">
+            <h4>👨‍👩‍👧‍👦 Parent Account</h4>
+            <p><strong>Email:</strong> <code>parent@demo.com</code></p>
+            <p><strong>Password:</strong> <code>demo123</code></p>
+            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem">
+              Access parent dashboard to view children, activities, and location
+              tracking
+            </p>
+          </div>
+
+          <div class="cred-box">
+            <h4>👨‍🏫 Teacher Account</h4>
+            <p><strong>Email:</strong> <code>teacher@demo.com</code></p>
+            <p><strong>Password:</strong> <code>teacher123</code></p>
+            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem">
+              Access teacher portal to manage students, grades, and attendance
+            </p>
+          </div>
+
+          <div class="cred-box">
+            <h4>🏫 School Code</h4>
+            <p><strong>Code:</strong> <code>SCH001</code></p>
+            <p><strong>School:</strong> Nairobi Primary School</p>
+            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem">
+              Use this code when registering new parent accounts
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards" style="margin-top: 2rem">
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <h2>Setup & Installation</h2>
+          <p>
+            Interactive guide to setup database and configure the system.
+            One-click database initialization.
+          </p>
+          <div class="card-links">
+            <a href="SETUP.html" class="btn btn-info">🔧 Setup Guide</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <h2>Documentation</h2>
+          <p>
+            Complete documentation with API reference, troubleshooting, and
+            feature descriptions.
+          </p>
+          <div class="card-links">
+            <a href="README.md" class="btn btn-info" target="_blank"
+              >📖 Full Documentation</a
+            >
+            <a href="QUICKSTART.md" class="btn btn-info" target="_blank"
+              >⚡ Quick Start</a
+            >
+            <a href="PROJECT_SUMMARY.md" class="btn btn-info" target="_blank"
+              >📊 Project Summary</a
+            >
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🗄️</div>
+          <h2>Database</h2>
+          <p>
+            Direct SQL script for manual database setup. 11 tables with
+            relationships and sample data.
+          </p>
+          <div class="card-links">
+            <a href="database_setup.sql" class="btn btn-info" target="_blank"
+              >💾 SQL Script</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <h3>🎓 KidSync Platform</h3>
+        <p>Complete Kids Tracking & Management System</p>
+        <p style="margin-top: 1rem; opacity: 0.9">
+          Built with PHP, MySQL, JavaScript, HTML & CSS
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8">
+          Class Project © 2025 | All Rights Reserved
+        </p>
+        <div style="margin-top: 1.5rem">
+          <strong>Quick Stats:</strong><br />
+          50+ Files • 8 API Endpoints • 11 Database Tables • 25+ Features • 17+
+          Pages
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KidSync - Child Device</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .device {
+        background: white;
+        max-width: 400px;
+        width: 100%;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+      }
+      .status-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+      }
+      .status-bar h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.3rem;
+      }
+      .status-bar p {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 1.5rem;
+      }
+      .info-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #667eea;
+      }
+      .info-card h3 {
+        color: #667eea;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-row .label {
+        color: #666;
+      }
+      .info-row .value {
+        color: #333;
+        font-weight: 600;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+        margin: 1rem 0;
+      }
+      .status-home {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .status-on-bus {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .status-at-school {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .btn {
+        width: 100%;
+        padding: 0.9rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 0.7rem;
+        transition: 0.3s;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+      .btn-success {
+        background: #10b981;
+        color: white;
+      }
+      .btn-warning {
+        background: #f59e0b;
+        color: white;
+      }
+      .log {
+        background: #1e293b;
+        color: #10b981;
+        font-family: "Courier New", monospace;
+        font-size: 0.75rem;
+        padding: 0.8rem;
+        border-radius: 8px;
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 1rem;
+      }
+      .log-entry {
+        margin: 0.2rem 0;
+      }
+      .log-time {
+        color: #64748b;
+      }
+      .activities-list {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .activity-item {
+        background: white;
+        border-left: 3px solid #667eea;
+        padding: 0.8rem;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .activity-item .time {
+        color: #667eea;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+      .activity-item .desc {
+        color: #555;
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="device">
+      <div class="status-bar">
+        <h2 id="childName">👶 Loading...</h2>
+        <p id="deviceToken">Device Token: ---</p>
+      </div>
+
+      <div class="content">
+        <div class="info-card">
+          <h3>📍 Current Location</h3>
+          <div class="info-row">
+            <span class="label">Latitude:</span>
+            <span class="value" id="latitude">-</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Longitude:</span>
+            <span class="value" id="longitude">-</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Speed:</span>
+            <span class="value" id="speed">0 km/h</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Location:</span>
+            <span class="value" id="locationName">Unknown</span>
+          </div>
+        </div>
+
+        <div class="status-badge" id="statusBadge">🏠 Status: Home</div>
+
+        <div class="info-card">
+          <h3>🎯 Quick Actions</h3>
+          <button class="btn btn-success" onclick="simulateToSchool()">
+            🚌 Simulate: Go to School
+          </button>
+          <button class="btn btn-warning" onclick="simulateOnBus()">
+            🚐 Simulate: On Bus
+          </button>
+          <button class="btn btn-primary" onclick="simulateGoHome()">
+            🏠 Simulate: Go Home
+          </button>
+        </div>
+
+        <div class="info-card">
+          <h3>📋 Today's Activities</h3>
+          <div class="activities-list" id="activitiesList">
+            <p style="text-align: center; color: #999">No activities yet</p>
+          </div>
+          <button
+            class="btn btn-primary"
+            onclick="addActivity()"
+            style="margin-top: 0.5rem"
+          >
+            ➕ Add Activity
+          </button>
+        </div>
+
+        <div class="log" id="log">
+          <div class="log-entry">📱 Device initialized...</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "../backend/api";
+      let childData = null;
+      let locationInterval = null;
+
+      // Get child_id or device token from URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const childId = urlParams.get("child_id");
+      const deviceToken = urlParams.get("token");
+
+      if (!childId && !deviceToken) {
+        alert(
+          "⚠️ Missing child_id parameter!\n\nPlease use the URL from your parent dashboard.\n\nExample: ?child_id=1"
+        );
+        document.getElementById("deviceToken").textContent =
+          "Device Token: MISSING - Need child_id parameter";
+      } else {
+        if (deviceToken) {
+          document.getElementById("deviceToken").textContent =
+            "Device Token: " + deviceToken.substring(0, 16) + "...";
+        } else {
+          document.getElementById("deviceToken").textContent =
+            "Child ID: " + childId;
+        }
+        initializeDevice();
+      }
+
+      async function initializeDevice() {
+        try {
+          log("🔍 Fetching device information...");
+
+          const actualChildId = childId || urlParams.get("child_id") || 1;
+
+          // Fetch child data from API
+          const response = await fetch(API_BASE + "/children.php?parent_id=1");
+          const data = await response.json();
+
+          if (data.success && data.children) {
+            childData =
+              data.children.find((c) => c.id == actualChildId) ||
+              data.children[0];
+
+            if (childData) {
+              document.getElementById(
+                "childName"
+              ).textContent = `👶 ${childData.first_name} ${childData.last_name}`;
+              document.getElementById("deviceToken").textContent = `Grade: ${
+                childData.grade
+              } • ${childData.school_name || "School"}`;
+            }
+          }
+
+          if (!childData) {
+            childData = { id: actualChildId };
+            document.getElementById("childName").textContent =
+              "👶 Child Device #" + actualChildId;
+          }
+
+          log("✅ Device registered for " + (childData.first_name || "Child"));
+
+          // Start location tracking
+          startLocationTracking();
+
+          // Load today's activities
+          loadActivities();
+
+          // Check messages every 10 seconds
+          setInterval(checkMessages, 10000);
+          checkMessages();
+        } catch (error) {
+          log("❌ Error: " + error.message);
+        }
+      }
+
+      function startLocationTracking() {
+        log("📍 Starting GPS tracking...");
+
+        // Simulate initial location (Nairobi, Kenya)
+        updateLocation(-1.2921, 36.8219, 0, "Home");
+
+        // Update location every 30 seconds
+        locationInterval = setInterval(() => {
+          const lat = parseFloat(
+            document.getElementById("latitude").textContent
+          );
+          const lon = parseFloat(
+            document.getElementById("longitude").textContent
+          );
+
+          // Small random movement
+          const newLat = lat + (Math.random() - 0.5) * 0.001;
+          const newLon = lon + (Math.random() - 0.5) * 0.001;
+
+          updateLocation(
+            newLat,
+            newLon,
+            0,
+            document.getElementById("locationName").textContent
+          );
+        }, 30000);
+      }
+
+      async function updateLocation(lat, lon, speed, locationName) {
+        document.getElementById("latitude").textContent = lat.toFixed(6);
+        document.getElementById("longitude").textContent = lon.toFixed(6);
+        document.getElementById("speed").textContent =
+          speed.toFixed(1) + " km/h";
+        document.getElementById("locationName").textContent = locationName;
+
+        // Update status based on location
+        let status = "home";
+        let statusText = "🏠 Status: Home";
+        let statusClass = "status-home";
+
+        if (speed > 10) {
+          status = "on-bus";
+          statusText = "🚌 Status: On Bus";
+          statusClass = "status-on-bus";
+        } else if (locationName.toLowerCase().includes("school")) {
+          status = "at-school";
+          statusText = "🏫 Status: At School";
+          statusClass = "status-at-school";
+        }
+
+        const badge = document.getElementById("statusBadge");
+        badge.textContent = statusText;
+        badge.className = "status-badge " + statusClass;
+
+        // Send to backend
+        try {
+          const response = await fetch(API_BASE + "/location.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              child_id: childData.id,
+              latitude: lat,
+              longitude: lon,
+              speed: speed,
+              location_name: locationName,
+            }),
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            log("📍 Location updated: " + locationName);
+          }
+        } catch (error) {
+          log("⚠️ Failed to send location: " + error.message);
+        }
+      }
+
+      async function simulateToSchool() {
+        log("🚌 Simulating trip to school...");
+
+        // Simulate bus movement
+        updateLocation(-1.29, 36.785, 45, "On Route to School");
+
+        setTimeout(() => {
+          updateLocation(-1.285, 36.78, 30, "Near School");
+        }, 3000);
+
+        setTimeout(() => {
+          updateLocation(-1.2835, 36.7785, 0, "Nairobi Primary School");
+          addActivityAuto("🚌 Arrived at School", "Bus arrival time");
+        }, 6000);
+      }
+
+      async function simulateOnBus() {
+        log("🚐 Simulating bus ride...");
+        updateLocation(-1.295, 36.81, 40, "On School Bus");
+      }
+
+      async function simulateGoHome() {
+        log("🏠 Simulating trip home...");
+
+        updateLocation(-1.29, 36.815, 35, "Going Home");
+
+        setTimeout(() => {
+          updateLocation(-1.2921, 36.8219, 0, "Home");
+          addActivityAuto("🏠 Arrived Home", "Safely reached home");
+        }, 5000);
+      }
+
+      async function addActivity() {
+        const title = prompt("Activity Title:", "🎨 Art Class");
+        if (!title) return;
+
+        const description = prompt("Description:", "Had fun with colors");
+
+        await addActivityAuto(title, description);
+      }
+
+      async function addActivityAuto(title, description) {
+        try {
+          const response = await fetch(API_BASE + "/activities.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              child_id: childData.id,
+              title: title,
+              description: description,
+              activity_type: "other",
+              icon: title.match(/[\u{1F300}-\u{1F9FF}]/u)?.[0] || "📝",
+              activity_time: new Date()
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " "),
+              created_by: "system",
+            }),
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            log("✅ Activity added: " + title);
+            loadActivities();
+          }
+        } catch (error) {
+          log("❌ Failed to add activity: " + error.message);
+        }
+      }
+
+      async function loadActivities() {
+        try {
+          const response = await fetch(
+            API_BASE + `/activities.php?child_id=${childData.id}`
+          );
+          const data = await response.json();
+
+          if (data.success && data.activities.length > 0) {
+            const list = document.getElementById("activitiesList");
+            list.innerHTML = "";
+
+            data.activities.forEach((activity) => {
+              const time = new Date(activity.activity_time).toLocaleTimeString(
+                "en-US",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              );
+
+              const div = document.createElement("div");
+              div.className = "activity-item";
+              div.innerHTML = `
+                            <div class="time">${activity.icon} ${time}</div>
+                            <div class="desc">${activity.title}</div>
+                        `;
+              list.appendChild(div);
+            });
+          }
+        } catch (error) {
+          log("⚠️ Failed to load activities: " + error.message);
+        }
+      }
+
+      function log(message) {
+        const logDiv = document.getElementById("log");
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement("div");
+        entry.className = "log-entry";
+        entry.innerHTML = `<span class="log-time">[${time}]</span> ${message}`;
+        logDiv.appendChild(entry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      // Check for new messages from parent
+      async function checkMessages() {
+        if (!childData) return;
+
+        try {
+          const response = await fetch(
+            API_BASE + `/messages.php?child_id=${childData.id}`
+          );
+          const data = await response.json();
+
+          if (data.success && data.messages && data.messages.length > 0) {
+            // Filter messages for this child
+            const unreadMessages = data.messages.filter(
+              (m) => m.receiver_type === "child" && m.is_read === 0
+            );
+
+            if (unreadMessages.length > 0) {
+              const latestMsg = unreadMessages[0];
+              log(
+                `💬 New message from ${latestMsg.sender_name}: "${latestMsg.message}"`
+              );
+
+              // Show notification
+              if (Notification.permission === "granted") {
+                new Notification(`Message from ${latestMsg.sender_name}`, {
+                  body: latestMsg.message,
+                  icon: "📱",
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Failed to check messages:", error);
+        }
+      }
+
+      // Request notification permission
+      if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+      }
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", () => {
+        if (locationInterval) {
+          clearInterval(locationInterval);
+        }
+      });
+    </script>
+  </body>
+</html>

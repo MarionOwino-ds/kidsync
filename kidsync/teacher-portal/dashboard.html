@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard - KidSync</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #f8fafc;
+      }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 250px;
+        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 1.5rem;
+        position: fixed;
+        height: 100vh;
+      }
+      .sidebar h2 {
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+      }
+      .sidebar nav a {
+        display: block;
+        padding: 0.9rem 1rem;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        transition: 0.3s;
+      }
+      .sidebar nav a:hover,
+      .sidebar nav a.active {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .main {
+        margin-left: 250px;
+        flex: 1;
+        padding: 2rem;
+      }
+      .header {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header h1 {
+        color: #10b981;
+        font-size: 1.8rem;
+      }
+      .btn {
+        padding: 0.7rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-primary {
+        background: #10b981;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #059669;
+      }
+      .btn-secondary {
+        background: #6b7280;
+        color: white;
+      }
+      .section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .section h2 {
+        color: #10b981;
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+      }
+      .tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #e5e7eb;
+      }
+      .tab {
+        padding: 0.8rem 1.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #6b7280;
+        transition: 0.3s;
+      }
+      .tab.active {
+        color: #10b981;
+        border-bottom: 3px solid #10b981;
+      }
+      .students-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+      .student-card {
+        background: #f8fafc;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .student-card:hover {
+        border-color: #10b981;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+      }
+      .student-card h3 {
+        color: #333;
+        margin-bottom: 0.3rem;
+      }
+      .student-card p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table th,
+      table td {
+        text-align: left;
+        padding: 0.9rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      table th {
+        background: #f8fafc;
+        color: #10b981;
+        font-weight: 600;
+      }
+      table tr:hover {
+        background: #f8fafc;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        color: #333;
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #10b981;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal.active {
+        display: flex;
+      }
+      .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+      .modal-header h2 {
+        color: #10b981;
+      }
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .stat-card {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+      }
+      .stat-card h3 {
+        font-size: 2rem;
+        margin-bottom: 0.3rem;
+      }
+      .stat-card p {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h2>👨‍🏫 Teacher Portal</h2>
+        <nav>
+          <a href="#" class="active" onclick="showSection('dashboard')"
+            >📊 Dashboard</a
+          >
+          <a href="#" onclick="showSection('students')">👥 Students</a>
+          <a href="#" onclick="showSection('grades')">📝 Grades & Marks</a>
+          <a href="#" onclick="showSection('attendance')">📅 Attendance</a>
+          <a href="#" onclick="showSection('activities')">📖 Activities</a>
+          <a href="#" onclick="showSection('health')">🍎 Health</a>
+          <a href="#" onclick="showSection('milestones')">⭐ Milestones</a>
+          <a href="#" onclick="showSection('messages')">💬 Messages</a>
+          <a href="#" onclick="showSection('reportCards')">📄 Report Cards</a>
+        </nav>
+        <button
+          class="btn btn-secondary"
+          onclick="logout()"
+          style="margin-top: auto; width: 100%"
+        >
+          Logout
+        </button>
+      </div>
+
+      <div class="main">
+        <div class="header">
+          <h1>Welcome, <span id="teacherName">Teacher</span></h1>
+          <p id="schoolName">School</p>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+          <div class="stats">
+            <div class="stat-card">
+              <h3 id="totalStudents">0</h3>
+              <p>Total Students</p>
+            </div>
+            <div
+              class="stat-card"
+              style="background: linear-gradient(135deg, #3b82f6, #2563eb)"
+            >
+              <h3 id="presentToday">0</h3>
+              <p>Present Today</p>
+            </div>
+            <div
+              class="stat-card"
+              style="background: linear-gradient(135deg, #f59e0b, #d97706)"
+            >
+              <h3 id="unreadMessages">0</h3>
+              <p>Unread Messages</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>📋 Quick Actions</h2>
+            <button
+              class="btn btn-primary"
+              onclick="showSection('attendance'); markAttendanceForToday()"
+            >
+              📅 Mark Today's Attendance
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="showSection('grades'); openGradeModal()"
+            >
+              📝 Add Grades
+            </button>
+            <button class="btn btn-primary" onclick="showSection('messages')">
+              💬 Send Message
+            </button>
+          </div>
+        </div>
+
+        <!-- Students Section -->
+        <div id="students-section" style="display: none">
+          <div class="section">
+            <h2>👥 My Students</h2>
+            <div class="students-grid" id="studentsGrid"></div>
+          </div>
+        </div>
+
+        <!-- Grades Section -->
+        <div id="grades-section" style="display: none">
+          <div class="section">
+            <h2>📝 Academic Records</h2>
+            <button class="btn btn-primary" onclick="openGradeModal()">
+              ➕ Add New Grade
+            </button>
+            <table id="gradesTable" style="margin-top: 1rem">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Subject</th>
+                  <th>Type</th>
+                  <th>Marks</th>
+                  <th>Grade</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="gradesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div id="attendance-section" style="display: none">
+          <div class="section">
+            <h2>📅 Attendance Management</h2>
+            <div class="form-group">
+              <label>Select Date</label>
+              <input type="date" id="attendanceDate" value="" />
+            </div>
+            <button class="btn btn-primary" onclick="markAttendanceForDate()">
+              Mark Attendance
+            </button>
+            <div id="attendanceList" style="margin-top: 1rem"></div>
+          </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="messages-section" style="display: none">
+          <div class="section">
+            <h2>💬 Messages</h2>
+            <button class="btn btn-primary" onclick="openMessageModal()">
+              ✉️ New Message
+            </button>
+            <div id="messagesList" style="margin-top: 1rem"></div>
+          </div>
+        </div>
+
+        <!-- Activities Section -->
+        <div id="activities-section" style="display: none">
+          <div class="section">
+            <h2>📖 Log Activities</h2>
+            <button class="btn btn-primary" onclick="openActivityModal()">
+              ➕ Add Activity
+            </button>
+            <table style="margin-top: 1rem">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Activity</th>
+                  <th>Date/Time</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody id="activitiesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Health Section -->
+        <div id="health-section" style="display: none">
+          <div class="section">
+            <h2>🍎 Health Records</h2>
+            <button class="btn btn-primary" onclick="openHealthModal()">
+              ➕ Add Health Record
+            </button>
+            <table style="margin-top: 1rem">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Date</th>
+                  <th>Meals</th>
+                  <th>Sleep (hrs)</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="healthBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Milestones Section -->
+        <div id="milestones-section" style="display: none">
+          <div class="section">
+            <h2>⭐ Milestones & Achievements</h2>
+            <button class="btn btn-primary" onclick="openMilestoneModal()">
+              ➕ Add Milestone
+            </button>
+            <table style="margin-top: 1rem">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Milestone</th>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Badge</th>
+                </tr>
+              </thead>
+              <tbody id="milestonesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Report Cards Section -->
+        <div id="reportCards-section" style="display: none">
+          <div class="section">
+            <h2>📄 Generate Report Cards</h2>
+            <div class="form-group">
+              <label>Select Student</label>
+              <select id="reportStudentSelect"></select>
+            </div>
+            <div class="form-group">
+              <label>Term/Period</label>
+              <select id="reportTerm">
+                <option>Term 1 - 2025</option>
+                <option>Term 2 - 2025</option>
+                <option>Term 3 - 2025</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="generateReportCard()">
+              📄 Generate Report Card
+            </button>
+            <div id="reportCardPreview" style="margin-top: 1.5rem"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grade Modal -->
+    <div id="gradeModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Grade</h2>
+          <button class="close-btn" onclick="closeModal('gradeModal')">
+            &times;
+          </button>
+        </div>
+        <form id="gradeForm">
+          <div class="form-group">
+            <label>Student</label>
+            <select id="gradeStudentSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input
+              type="text"
+              id="gradeSubject"
+              placeholder="e.g., Mathematics"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Assessment Type</label>
+            <select id="gradeType" required>
+              <option value="test">Test</option>
+              <option value="exam">Exam</option>
+              <option value="assignment">Assignment</option>
+              <option value="project">Project</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Marks Obtained</label>
+            <input type="number" id="marksObtained" step="0.1" required />
+          </div>
+          <div class="form-group">
+            <label>Total Marks</label>
+            <input type="number" id="totalMarks" step="0.1" required />
+          </div>
+          <div class="form-group">
+            <label>Comments</label>
+            <textarea
+              id="gradeComments"
+              rows="3"
+              placeholder="Teacher's comments"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Assessment Date</label>
+            <input type="date" id="assessmentDate" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Grade</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Send Message</h2>
+          <button class="close-btn" onclick="closeModal('messageModal')">
+            &times;
+          </button>
+        </div>
+        <form id="messageForm">
+          <div class="form-group">
+            <label>Select Student (to send to parent)</label>
+            <select id="messageStudentSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea
+              id="messageText"
+              rows="5"
+              placeholder="Type your message..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Activity Modal -->
+    <div id="activityModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Activity</h2>
+          <button class="close-btn" onclick="closeModal('activityModal')">
+            &times;
+          </button>
+        </div>
+        <form id="activityForm">
+          <div class="form-group">
+            <label>Student</label>
+            <select id="activityStudentSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label>Activity Type</label>
+            <select id="activityType" required>
+              <option value="">Select type...</option>
+              <option value="reading">📚 Reading</option>
+              <option value="art">🎨 Art</option>
+              <option value="music">🎵 Music</option>
+              <option value="sports">⚽ Sports</option>
+              <option value="outdoor">🌳 Outdoor Play</option>
+              <option value="science">🔬 Science</option>
+              <option value="math">🔢 Math</option>
+              <option value="lunch">🍱 Lunch</option>
+              <option value="snack">🍪 Snack</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date & Time</label>
+            <input type="datetime-local" id="activityDateTime" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              id="activityDescription"
+              rows="4"
+              placeholder="Activity details..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Activity</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Health Modal -->
+    <div id="healthModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Health Record</h2>
+          <button class="close-btn" onclick="closeModal('healthModal')">
+            &times;
+          </button>
+        </div>
+        <form id="healthForm">
+          <div class="form-group">
+            <label>Student</label>
+            <select id="healthStudentSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="healthDate" required />
+          </div>
+          <div class="form-group">
+            <label>Meals Today</label>
+            <input
+              type="text"
+              id="healthMeals"
+              placeholder="e.g., Breakfast: Oatmeal, Lunch: Sandwich"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Sleep Hours</label>
+            <input
+              type="number"
+              id="healthSleep"
+              min="0"
+              max="24"
+              step="0.5"
+              placeholder="Hours"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea
+              id="healthNotes"
+              rows="3"
+              placeholder="Additional health notes..."
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Record</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Milestone Modal -->
+    <div id="milestoneModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Milestone</h2>
+          <button class="close-btn" onclick="closeModal('milestoneModal')">
+            &times;
+          </button>
+        </div>
+        <form id="milestoneForm">
+          <div class="form-group">
+            <label>Student</label>
+            <select id="milestoneStudentSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label>Milestone Title</label>
+            <input
+              type="text"
+              id="milestoneTitle"
+              placeholder="e.g., First Words, Learned ABC"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Date Achieved</label>
+            <input type="date" id="milestoneDate" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              id="milestoneDescription"
+              rows="4"
+              placeholder="Milestone details..."
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Badge Icon</label>
+            <select id="milestoneBadge" required>
+              <option value="">Select badge...</option>
+              <option value="🌟">⭐ Star</option>
+              <option value="🏆">🏆 Trophy</option>
+              <option value="🎯">🎯 Target</option>
+              <option value="🎨">🎨 Creative</option>
+              <option value="📚">📚 Scholar</option>
+              <option value="⚽">⚽ Athletic</option>
+              <option value="🎵">🎵 Musical</option>
+              <option value="🔬">🔬 Scientific</option>
+              <option value="💡">💡 Brilliant</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Milestone</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

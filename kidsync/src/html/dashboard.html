@@ -1,147 +1,832 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KidSync Dashboard</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
-        .dashboard { display: flex; min-height: 100vh; }
-        .sidebar { width: 220px; background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%); color: white; padding: 1.5rem 1rem; position: fixed; height: 100vh; overflow-y: auto; }
-        .sidebar h3 { font-size: 1.2rem; margin-bottom: 2rem; }
-        .nav-section { margin-bottom: 1.5rem; }
-        .nav-section-title { font-size: 0.75rem; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; font-weight: 600; }
-        .sidebar a { display: block; padding: 0.8rem 1rem; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; }
-        .sidebar a:hover { background: rgba(255,255,255,0.15); }
-        .logout { width: 100%; padding: 0.7rem; margin-top: auto; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 6px; cursor: pointer; }
-        .main { margin-left: 220px; padding: 0; }
-        .navbar { background: white; padding: 1.2rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .navbar img { width: 100px; height: auto; }
-        .content { padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .header h1 { color: #1e40af; font-size: 1.6rem; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .section-title { color: #1e40af; font-size: 1.3rem; margin: 1.5rem 0 1rem; font-weight: 600; }
-        .kids-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-        .kid-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #f97316; transition: 0.3s; height: 100%; cursor: pointer; }
-        .kid-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
-        .kid-card.active { border-left-color: #2563eb; background: #f0f9ff; }
-        .kid-header { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
-        .kid-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; }
-        .kid-info h3 { color: #1e40af; font-size: 1.1rem; margin-bottom: 0.2rem; }
-        .kid-info p { color: #666; font-size: 0.9rem; }
-        .status-badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.8rem; }
-        .status-at-school { background: #d1fae5; color: #065f46; }
-        .status-on-bus { background: #fef3c7; color: #92400e; }
-        .status-home { background: #dbeafe; color: #1e40af; }
-        .quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; }
-        .stat { background: #f8fafc; padding: 0.8rem; border-radius: 8px; text-align: center; }
-        .stat .val { color: #f97316; font-size: 1.2rem; font-weight: bold; }
-        .stat .lbl { color: #666; font-size: 0.8rem; }
-        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-        .btn { padding: 0.6rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .btn-primary { background: #2563eb; color: white; }
-        .btn-primary:hover { background: #1e40af; }
-        .btn-secondary { background: #f97316; color: white; }
-        .btn-secondary:hover { background: #ea580c; }
-        .activity { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-        .activity-item { display: flex; gap: 1rem; padding: 0.8rem; border-bottom: 1px solid #eee; }
-        .activity-item:last-child { border-bottom: none; }
-        .time { min-width: 70px; color: #f97316; font-weight: 600; font-size: 0.85rem; }
-        .event { color: #555; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .feature-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .feature-card h3 { color: #1e40af; margin-bottom: 1rem; }
-        .location-info { background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #2563eb; margin-bottom: 1rem; }
-        .loc-line { font-size: 0.9rem; color: #1e40af; margin: 0.5rem 0; }
-        .map { width: 100%; height: 180px; background: linear-gradient(135deg, #dbeafe, #fed7aa); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-        .messages { margin-top: 1rem; }
-        .msg-list { background: #f8fafc; border-radius: 8px; height: 180px; overflow-y: auto; margin-bottom: 0.8rem; padding: 0.8rem; }
-        .msg { padding: 0.6rem; border-bottom: 1px solid #e5e7eb; font-size: 0.85rem; }
-        .msg-teacher { background: #fef3c7; }
-        .msg-parent { background: #dbeafe; text-align: right; }
-        .msg-input { display: flex; gap: 0.5rem; }
-        .msg-input input { flex: 1; padding: 0.6rem; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 0.9rem; }
-        .msg-input button { background: #f97316; color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; cursor: pointer; }
-        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .kids-grid { grid-template-columns: 1fr; } }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #f8fafc;
+      }
+      .dashboard {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 220px;
+        background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%);
+        color: white;
+        padding: 1.5rem 1rem;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+      }
+      .sidebar h3 {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .nav-section {
+        margin-bottom: 1.5rem;
+      }
+      .nav-section-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+      .sidebar a {
+        display: block;
+        padding: 0.8rem 1rem;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: 0.3s;
+      }
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .logout {
+        width: 100%;
+        padding: 0.7rem;
+        margin-top: auto;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .main {
+        margin-left: 220px;
+        padding: 0;
+      }
+      .navbar {
+        background: white;
+        padding: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .navbar img {
+        width: 100px;
+        height: auto;
+      }
+      .content {
+        padding: 2rem;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header h1 {
+        color: #1e40af;
+        font-size: 1.6rem;
+      }
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .section-title {
+        color: #1e40af;
+        font-size: 1.3rem;
+        margin: 1.5rem 0 1rem;
+        font-weight: 600;
+      }
+      .kids-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .kid-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #f97316;
+        transition: 0.3s;
+        height: 100%;
+        position: relative;
+      }
+      .kid-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+      .kid-card.active {
+        border-left-color: #2563eb;
+        background: #f0f9ff;
+      }
+      .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ef4444;
+        color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.85rem;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+        animation: bounce 2s infinite;
+        z-index: 10;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .kid-header {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        align-items: center;
+      }
+      .kid-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+      .kid-info h3 {
+        color: #1e40af;
+        font-size: 1.1rem;
+        margin-bottom: 0.2rem;
+      }
+      .kid-info p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+      }
+      .status-at-school {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .status-on-bus {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .status-home {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .quick-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .stat {
+        background: #f8fafc;
+        padding: 0.8rem;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .stat .val {
+        color: #f97316;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      .stat .lbl {
+        color: #666;
+        font-size: 0.8rem;
+      }
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+      }
+      .btn {
+        padding: 0.6rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .btn-primary {
+        background: #2563eb;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #1e40af;
+      }
+      .btn-secondary {
+        background: #f97316;
+        color: white;
+      }
+      .btn-secondary:hover {
+        background: #ea580c;
+      }
+      .activity {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+      .activity-item {
+        display: flex;
+        gap: 1rem;
+        padding: 0.8rem;
+        border-bottom: 1px solid #eee;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .time {
+        min-width: 70px;
+        color: #f97316;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+      .event {
+        color: #555;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .feature-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .feature-card h3 {
+        color: #1e40af;
+        margin-bottom: 1rem;
+      }
+      .location-info {
+        background: #f0f9ff;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #2563eb;
+        margin-bottom: 1rem;
+      }
+      .loc-line {
+        font-size: 0.9rem;
+        color: #1e40af;
+        margin: 0.5rem 0;
+      }
+      .map {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #dbeafe, #fed7aa);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+      }
+      .messages {
+        margin-top: 1rem;
+      }
+      .msg-list {
+        background: #f8fafc;
+        border-radius: 8px;
+        height: 180px;
+        overflow-y: auto;
+        margin-bottom: 0.8rem;
+        padding: 0.8rem;
+      }
+      .msg {
+        padding: 0.6rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 0.85rem;
+      }
+      .msg-teacher {
+        background: #fef3c7;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+      }
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideIn 0.3s ease;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #f97316;
+        padding-bottom: 1rem;
+      }
+      .modal-header h2 {
+        color: #1e40af;
+        font-size: 1.5rem;
+      }
+      .modal-close {
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+      }
+      .modal-close:hover {
+        background: #dc2626;
+        transform: rotate(90deg);
+      }
+      .message-item {
+        background: #f8fafc;
+        padding: 1rem;
+        margin-bottom: 0.8rem;
+        border-radius: 8px;
+        border-left: 4px solid #2563eb;
+      }
+      .message-item.unread {
+        background: #fef3c7;
+        border-left-color: #f97316;
+      }
+      .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+      .message-sender {
+        font-weight: 600;
+        color: #1e40af;
+      }
+      .message-time {
+        font-size: 0.8rem;
+        color: #666;
+      }
+      .message-text {
+        color: #333;
+        line-height: 1.5;
+      }
+      .no-messages {
+        text-align: center;
+        padding: 2rem;
+        color: #999;
+      }
+      .msg-parent {
+        background: #dbeafe;
+        text-align: right;
+      }
+      .msg-input {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .msg-input input {
+        flex: 1;
+        padding: 0.6rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 0.9rem;
+      }
+      .msg-input button {
+        background: #f97316;
+        color: white;
+        border: none;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          position: relative;
+          height: auto;
+        }
+        .main {
+          margin-left: 0;
+        }
+        .kids-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="dashboard">
-        <div class="sidebar">
-            <h3>Menu</h3>
-            <div class="nav-section">
-                <div class="nav-section-title">Main</div>
-                <a href="dashboard.html">📊 Dashboard</a>
-                <a href="activities.html">📖 Activities</a>
-                <a href="health.html">🍎 Health</a>
-            </div>
-            <div class="nav-section">
-                <div class="nav-section-title">Info</div>
-                <a href="milestones.html">⭐ Milestones</a>
-                <a href="calendar.html">📅 Calendar</a>
-                <a href="location.html">📍 Location</a>
-            </div>
-            <div class="nav-section">
-                <div class="nav-section-title">Account</div>
-                <a href="profile.html">👤 Profile</a>
-                <a href="settings.html">⚙️ Settings</a>
-            </div>
-            <button class="logout" onclick="logout()">🚪 Logout</button>
+      <div class="sidebar">
+        <h3>Menu</h3>
+        <div class="nav-section">
+          <div class="nav-section-title">Main</div>
+          <a href="dashboard.html">📊 Dashboard</a>
+          <a href="activities.html">📖 Activities</a>
+          <a href="health.html">🍎 Health</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Info</div>
+          <a href="milestones.html">⭐ Milestones</a>
+          <a href="calendar.html">📅 Calendar</a>
+          <a href="location.html">📍 Location</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html">👤 Profile</a>
+          <a href="settings.html">⚙️ Settings</a>
+        </div>
+        <button class="logout" onclick="logout()">🚪 Logout</button>
+      </div>
+
+      <div class="main">
+        <div class="navbar">
+          <img
+            src="Screenshot from 2025-10-27 08-11-57.png"
+            alt="KidSync Logo"
+          />
         </div>
 
-        <div class="main">
-            <div class="navbar">
-                <img src="Screenshot from 2025-10-27 08-11-57.png" alt="KidSync Logo">
+        <div class="content">
+          <div class="header">
+            <h1>Welcome, <span id="userName"></span> 👋</h1>
+            <div style="display: flex; gap: 1rem; align-items: center">
+              <button
+                style="
+                  background: #10b981;
+                  color: white;
+                  border: none;
+                  padding: 0.7rem 1.2rem;
+                  border-radius: 8px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: 0.3s;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+                onclick="openAddChildModal()"
+                title="Add New Child"
+              >
+                ➕ Add Child
+              </button>
+              <button
+                style="
+                  background: #2563eb;
+                  color: white;
+                  border: none;
+                  width: 45px;
+                  height: 45px;
+                  border-radius: 50%;
+                  font-size: 1.5rem;
+                  cursor: pointer;
+                  transition: 0.3s;
+                "
+                onclick="openMessages()"
+                title="Messages"
+              >
+                💬
+              </button>
+              <div class="avatar" id="avatar"></div>
+            </div>
+          </div>
+
+          <h2 class="section-title">👶 Your Children</h2>
+          <div class="kids-grid" id="kidsGrid"></div>
+
+          <h2 class="section-title">📋 Today's Activity</h2>
+          <div class="activity" id="activityFeed"></div>
+
+          <h2 class="section-title">📍 Location & 💬 Messaging</h2>
+          <div class="features">
+            <div class="feature-card">
+              <h3>📍 Live Location Tracking</h3>
+              <div class="location-info">
+                <div class="loc-line">
+                  🚌 <strong>Status:</strong> <span id="busStatus"></span>
+                </div>
+                <div class="loc-line">
+                  📍 <strong>Location:</strong> <span id="locationName"></span>
+                </div>
+                <div class="loc-line">
+                  🕐 <strong>Last Updated:</strong>
+                  <span id="locationTime"></span>
+                </div>
+                <div class="loc-line">
+                  📌 <strong>Latitude:</strong> <span id="latitude"></span>
+                </div>
+                <div class="loc-line">
+                  📌 <strong>Longitude:</strong> <span id="longitude"></span>
+                </div>
+                <div class="loc-line">
+                  🚗 <strong>Speed:</strong> <span id="speed"></span>
+                </div>
+              </div>
+              <div class="map">📍 Map Integration Ready</div>
             </div>
 
-            <div class="content">
-                <div class="header">
-                    <h1>Welcome, <span id="userName"></span> 👋</h1>
-                    <div style="display: flex; gap: 2rem; align-items: center;">
-                        <button style="background: #2563eb; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; transition: 0.3s;" onclick="openMessages()" title="Messages">💬</button>
-                        <div class="avatar" id="avatar"></div>
-                    </div>
+            <div class="feature-card">
+              <h3>💬 Teacher Messages</h3>
+              <div class="messages">
+                <div class="msg-list" id="msgList"></div>
+                <div class="msg-input">
+                  <input
+                    type="text"
+                    id="msgInput"
+                    placeholder="Type message..."
+                  />
+                  <button onclick="sendMsg()">Send</button>
                 </div>
-
-                <h2 class="section-title">👶 Your Children</h2>
-                <div class="kids-grid" id="kidsGrid"></div>
-
-                <h2 class="section-title">📋 Today's Activity</h2>
-                <div class="activity" id="activityFeed"></div>
-
-                <h2 class="section-title">📍 Location & 💬 Messaging</h2>
-                <div class="features">
-                    <div class="feature-card">
-                        <h3>📍 Live Location Tracking</h3>
-                        <div class="location-info">
-                            <div class="loc-line">🚌 <strong>Status:</strong> <span id="busStatus"></span></div>
-                            <div class="loc-line">📍 <strong>Location:</strong> <span id="locationName"></span></div>
-                            <div class="loc-line">🕐 <strong>Last Updated:</strong> <span id="locationTime"></span></div>
-                            <div class="loc-line">📌 <strong>Latitude:</strong> <span id="latitude"></span></div>
-                            <div class="loc-line">📌 <strong>Longitude:</strong> <span id="longitude"></span></div>
-                            <div class="loc-line">🚗 <strong>Speed:</strong> <span id="speed"></span></div>
-                        </div>
-                        <div class="map">📍 Map Integration Ready</div>
-                    </div>
-
-                    <div class="feature-card">
-                        <h3>💬 Teacher Messages</h3>
-                        <div class="messages">
-                            <div class="msg-list" id="msgList"></div>
-                            <div class="msg-input">
-                                <input type="text" id="msgInput" placeholder="Type message...">
-                                <button onclick="sendMsg()">Send</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Messages Modal -->
+    <div id="messagesModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>💬 Messages for <span id="modalChildName"></span></h2>
+          <button class="modal-close" onclick="closeMessagesModal()">×</button>
+        </div>
+        <div
+          id="modalMessagesList"
+          style="max-height: 400px; overflow-y: auto; margin-bottom: 1rem"
+        ></div>
+        <div
+          class="msg-input"
+          style="
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+          "
+        >
+          <input
+            type="text"
+            id="replyInput"
+            placeholder="Type your reply..."
+            style="
+              flex: 1;
+              padding: 0.75rem;
+              border: 1px solid #d1d5db;
+              border-radius: 0.5rem;
+            "
+          />
+          <button
+            onclick="sendReply()"
+            style="
+              padding: 0.75rem 1.5rem;
+              background: #3b82f6;
+              color: white;
+              border: none;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              font-weight: 600;
+            "
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Child Modal -->
+    <div id="addChildModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>➕ Add New Child</h2>
+          <button class="modal-close" onclick="closeAddChildModal()">×</button>
+        </div>
+        <form id="addChildForm" style="display: grid; gap: 1rem">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
+            <div>
+              <label
+                style="
+                  display: block;
+                  color: #1e40af;
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                "
+                >First Name *</label
+              >
+              <input
+                type="text"
+                id="childFirstName"
+                required
+                style="
+                  width: 100%;
+                  padding: 0.7rem;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 6px;
+                  font-size: 1rem;
+                "
+              />
+            </div>
+            <div>
+              <label
+                style="
+                  display: block;
+                  color: #1e40af;
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                "
+                >Last Name *</label
+              >
+              <input
+                type="text"
+                id="childLastName"
+                required
+                style="
+                  width: 100%;
+                  padding: 0.7rem;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 6px;
+                  font-size: 1rem;
+                "
+              />
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
+            <div>
+              <label
+                style="
+                  display: block;
+                  color: #1e40af;
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                "
+                >Age *</label
+              >
+              <input
+                type="number"
+                id="childAge"
+                min="3"
+                max="12"
+                required
+                style="
+                  width: 100%;
+                  padding: 0.7rem;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 6px;
+                  font-size: 1rem;
+                "
+              />
+            </div>
+            <div>
+              <label
+                style="
+                  display: block;
+                  color: #1e40af;
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                "
+                >Grade *</label
+              >
+              <select
+                id="childGrade"
+                required
+                style="
+                  width: 100%;
+                  padding: 0.7rem;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 6px;
+                  font-size: 1rem;
+                "
+              >
+                <option value="">Select Grade</option>
+                <option value="Pre-K">Pre-K</option>
+                <option value="Kindergarten">Kindergarten</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Grade 3">Grade 3</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label
+              style="
+                display: block;
+                color: #1e40af;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+              "
+              >School Code *</label
+            >
+            <input
+              type="text"
+              id="childSchoolCode"
+              placeholder="SCH001"
+              required
+              style="
+                width: 100%;
+                padding: 0.7rem;
+                border: 2px solid #e5e7eb;
+                border-radius: 6px;
+                font-size: 1rem;
+              "
+            />
+            <small style="color: #666"
+              >Use SCH001 for Nairobi Primary School</small
+            >
+          </div>
+          <button
+            type="submit"
+            style="
+              background: #10b981;
+              color: white;
+              border: none;
+              padding: 0.9rem;
+              border-radius: 8px;
+              font-size: 1rem;
+              font-weight: 600;
+              cursor: pointer;
+              transition: 0.3s;
+              margin-top: 1rem;
+            "
+          >
+            ✅ Add Child
+          </button>
+        </form>
+      </div>
     </div>
 
     <script src="../js/common.js"></script>
     <script src="../js/dashboard.js"></script>
-</body>
+  </body>
 </html>

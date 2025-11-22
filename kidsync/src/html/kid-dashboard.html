@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Kid Dashboard - KidSync</title>
     <style>
       * {
@@ -240,6 +246,52 @@
           </h2>
           <div class="grid" id="statsGrid"></div>
 
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 1.5rem;
+              margin: 2rem 0;
+            "
+          >
+            <div
+              style="
+                background: white;
+                padding: 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              "
+              id="gradesSection"
+            >
+              <h3 style="color: #1e40af; margin-bottom: 1rem">📚 Loading...</h3>
+            </div>
+
+            <div
+              style="
+                background: white;
+                padding: 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              "
+              id="attendanceSection"
+            >
+              <h3 style="color: #1e40af; margin-bottom: 1rem">📅 Loading...</h3>
+            </div>
+          </div>
+
+          <div
+            style="
+              background: white;
+              padding: 1.5rem;
+              border-radius: 12px;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              margin-bottom: 2rem;
+            "
+            id="messagesSection"
+          >
+            <h3 style="color: #1e40af; margin-bottom: 1rem">💬 Loading...</h3>
+          </div>
+
           <div class="activity-section">
             <h3>📋 Today's Activities</h3>
             <div id="activityList"></div>
@@ -248,8 +300,7 @@
       </div>
     </div>
 
-    <script src="../js/common.js"></script>
-    <script src="../js/kid-dashboard.js"></script>
-
+    <script src="../js/common.js?v=2"></script>
+    <script src="../js/kid-dashboard.js?v=2"></script>
   </body>
 </html>

@@ -1,17 +1,31 @@
-document.getElementById('loginForm').addEventListener('submit', e => {
+const API_BASE = '../../backend/api';
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    if (email === 'parent@demo.com' && password === 'demo123') {
+    try {
+        const response = await fetch(API_BASE + '/login.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
 
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userName', 'Sarah Johnson');
+        const data = await response.json();
 
-        window.location.href = 'dashboard.html';
-    } else {
-        alert('Invalid credentials!\nDemo: parent@demo.com / demo123');
+        if (data.success && data.user.role === 'parent') {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userName', data.user.first_name + ' ' + data.user.last_name);
+            localStorage.setItem('userData', JSON.stringify(data.user));
+            localStorage.setItem('userChildren', JSON.stringify(data.children || []));
+            window.location.href = 'dashboard.html';
+        } else {
+            alert(data.message || 'Invalid credentials!\nDemo: parent@demo.com / demo123');
+        }
+    } catch (error) {
+        alert('Login error: ' + error.message);
     }
 });

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KidSync Setup - Installation Guide</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+      }
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 3rem;
+        font-size: 1.1rem;
+      }
+      .step {
+        background: #f8fafc;
+        border-left: 5px solid #667eea;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+      }
+      .step h2 {
+        color: #667eea;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .step-number {
+        background: #667eea;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .code-block {
+        background: #1e293b;
+        color: #10b981;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        overflow-x: auto;
+        margin: 0.8rem 0;
+      }
+      .btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      .btn:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+      }
+      .btn-success {
+        background: #10b981;
+      }
+      .btn-success:hover {
+        background: #059669;
+      }
+      .btn-warning {
+        background: #f59e0b;
+      }
+      .status {
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        font-weight: 600;
+      }
+      .status-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 5px solid #10b981;
+      }
+      .status-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 5px solid #ef4444;
+      }
+      .links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+      .link-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: 0.3s;
+        text-align: center;
+      }
+      .link-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      }
+      .link-card h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;
+      }
+      .link-card p {
+        opacity: 0.9;
+        font-size: 0.9rem;
+      }
+      .credentials {
+        background: #fff7ed;
+        border: 2px solid #f59e0b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+      .credentials h4 {
+        color: #f59e0b;
+        margin-bottom: 0.5rem;
+      }
+      ul {
+        margin-left: 1.5rem;
+        margin-top: 0.5rem;
+      }
+      li {
+        margin: 0.3rem 0;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎓 KidSync Setup Guide</h1>
+      <p class="subtitle">
+        Complete Kids Tracking Platform - Installation & Setup
+      </p>
+
+      <div id="status"></div>
+
+      <div class="step">
+        <h2><span class="step-number">1</span> Database Setup</h2>
+        <p>
+          First, let's create and initialize the database with all required
+          tables.
+        </p>
+        <div class="code-block">
+          1. Start your MySQL server (XAMPP/WAMP/MAMP)<br />
+          2. Click the button below to setup database
+        </div>
+        <button class="btn btn-success" onclick="setupDatabase()">
+          🗄️ Setup Database
+        </button>
+        <div id="dbStatus"></div>
+      </div>
+
+      <div class="step">
+        <h2><span class="step-number">2</span> Verify Installation</h2>
+        <p>Make sure all components are accessible:</p>
+        <ul>
+          <li>✓ Database created with 11 tables</li>
+          <li>✓ Sample school (SCH001) inserted</li>
+          <li>✓ Demo accounts created</li>
+          <li>✓ API endpoints configured</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h2><span class="step-number">3</span> Access Applications</h2>
+        <p>Use the links below to access different portals:</p>
+
+        <div class="links">
+          <a href="src/html/index.html" class="link-card" target="_blank">
+            <h3>👨‍👩‍👧‍👦 Parent Portal</h3>
+            <p>Monitor your children's activities, location, and health</p>
+          </a>
+
+          <a
+            href="teacher-portal/login.html"
+            class="link-card"
+            style="
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            "
+          >
+            <h3>👨‍🏫 Teacher Portal</h3>
+            <p>Manage students, grades, and parent communication</p>
+          </a>
+
+          <a
+            href="child-device/index.html?child_id=1"
+            class="link-card"
+            style="
+              background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            "
+          >
+            <h3>📱 Child Device</h3>
+            <p>Simulate child's device with location tracking</p>
+          </a>
+        </div>
+      </div>
+
+      <div class="step">
+        <h2><span class="step-number">4</span> Demo Credentials</h2>
+
+        <div class="credentials">
+          <h4>👨‍👩‍👧‍👦 Parent Login</h4>
+          <strong>Email:</strong> parent@demo.com<br />
+          <strong>Password:</strong> demo123
+        </div>
+
+        <div class="credentials">
+          <h4>👨‍🏫 Teacher Login</h4>
+          <strong>Email:</strong> teacher@demo.com<br />
+          <strong>Password:</strong> teacher123
+        </div>
+
+        <div class="credentials">
+          <h4>🏫 School Code (for registration)</h4>
+          <strong>Code:</strong> SCH001<br />
+          <strong>Name:</strong> Nairobi Primary School
+        </div>
+      </div>
+
+      <div class="step">
+        <h2><span class="step-number">5</span> Quick Start Guide</h2>
+        <p><strong>For Parents:</strong></p>
+        <ul>
+          <li>Login or register a new account</li>
+          <li>View dashboard with your children's information</li>
+          <li>Monitor live location and activities</li>
+          <li>Communicate with teachers via messaging</li>
+        </ul>
+
+        <p style="margin-top: 1rem"><strong>For Teachers:</strong></p>
+        <ul>
+          <li>Login to teacher portal</li>
+          <li>View all students in your school</li>
+          <li>Add grades, mark attendance, generate report cards</li>
+          <li>Send messages to parents</li>
+        </ul>
+
+        <p style="margin-top: 1rem">
+          <strong>For Child Device Simulation:</strong>
+        </p>
+        <ul>
+          <li>Access device with child ID and token</li>
+          <li>Simulate movement (Home → Bus → School)</li>
+          <li>Add activities that sync to parent dashboard</li>
+          <li>Watch live location updates</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h2><span class="step-number">6</span> Features Overview</h2>
+        <ul>
+          <li>✅ Real-time GPS location tracking</li>
+          <li>✅ Activity and event logging</li>
+          <li>✅ Health and meal monitoring</li>
+          <li>✅ Academic records and grades</li>
+          <li>✅ Report card generation</li>
+          <li>✅ Attendance management</li>
+          <li>✅ Parent-Teacher messaging</li>
+          <li>✅ Milestone tracking</li>
+          <li>✅ Multiple children per parent</li>
+          <li>✅ Responsive design</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h2>📚 Documentation</h2>
+        <p>
+          For detailed documentation, API reference, and troubleshooting, please
+          refer to:
+        </p>
+        <a href="README.md" class="btn" style="margin-top: 1rem"
+          >📖 View Full Documentation</a
+        >
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 3rem;
+          padding-top: 2rem;
+          border-top: 2px solid #e5e7eb;
+        "
+      >
+        <p style="color: #666; margin-bottom: 1rem">
+          KidSync - Complete Kids Tracking Platform<br />
+          <small>Class Project © 2025</small>
+        </p>
+        <p style="color: #999; font-size: 0.9rem">
+          🎓 Built with PHP, MySQL, JavaScript, HTML & CSS
+        </p>
+      </div>
+    </div>
+
+    <script>
+      async function setupDatabase() {
+        const btn = event.target;
+        const statusDiv = document.getElementById("dbStatus");
+
+        btn.disabled = true;
+        btn.textContent = "⏳ Setting up database...";
+        statusDiv.innerHTML =
+          '<div class="status" style="background: #fef3c7; color: #92400e;">Please wait while we create the database and tables...</div>';
+
+        try {
+          const response = await fetch("backend/includes/setup_database.php");
+          const text = await response.text();
+
+          if (text.includes("successfully") || text.includes("✅")) {
+            statusDiv.innerHTML = `
+                        <div class="status status-success">
+                            ✅ Database setup completed successfully!<br>
+                            <small style="margin-top: 0.5rem; display: block;">All tables created and demo data inserted.</small>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <strong>What was created:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Database: kidsync_db</li>
+                                <li>11 tables (users, children, teachers, schools, etc.)</li>
+                                <li>Demo parent account</li>
+                                <li>Demo teacher account</li>
+                                <li>Sample school (SCH001)</li>
+                            </ul>
+                        </div>
+                    `;
+            btn.textContent = "✅ Database Ready";
+            btn.classList.add("btn-success");
+
+            // Show success message at top
+            document.getElementById("status").innerHTML = `
+                        <div class="status status-success">
+                            🎉 Installation Complete! You can now access all portals using the links below.
+                        </div>
+                    `;
+          } else {
+            throw new Error("Setup script did not complete successfully");
+          }
+        } catch (error) {
+          statusDiv.innerHTML = `
+                    <div class="status status-error">
+                        ❌ Error: ${error.message}<br>
+                        <small style="margin-top: 0.5rem; display: block;">
+                            Please make sure:
+                            <ul style="margin-top: 0.3rem;">
+                                <li>MySQL server is running</li>
+                                <li>Database credentials in config.php are correct</li>
+                                <li>PHP has permission to create databases</li>
+                            </ul>
+                        </small>
+                    </div>
+                `;
+          btn.disabled = false;
+          btn.textContent = "🔄 Retry Setup";
+        }
+      }
+
+      // Check if already setup
+      window.addEventListener("load", async () => {
+        try {
+          const response = await fetch("backend/api/login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: "test", password: "test" }),
+          });
+
+          if (response.ok) {
+            document.getElementById("status").innerHTML = `
+                        <div class="status status-success">
+                            ✅ System is ready! Database and API are operational.
+                        </div>
+                    `;
+          }
+        } catch (error) {
+          document.getElementById("status").innerHTML = `
+                    <div class="status" style="background: #fef3c7; color: #92400e; border-left-color: #f59e0b;">
+                        ⚠️ Please setup the database using Step 1 below to get started.
+                    </div>
+                `;
+        }
+      });
+    </script>
+  </body>
+</html>
