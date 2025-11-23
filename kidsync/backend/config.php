@@ -10,7 +10,7 @@ date_default_timezone_set('Africa/Nairobi');
 
 // Error Reporting (disable in production)
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Disable display errors for clean JSON API output
 
 // CORS Headers
 header('Access-Control-Allow-Origin: *');

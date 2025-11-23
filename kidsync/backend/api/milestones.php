@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/error_handling_template.php';
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/Database.php';
 
@@ -11,16 +13,15 @@ if ($method === 'GET') {
     $teacher_id = $_GET['teacher_id'] ?? 0;
     
     if ($teacher_id > 0) {
-        // Teacher viewing all their students' milestones
-        $sql = "SELECT m.id, m.child_id, m.milestone_title, m.description, 
-                       m.achieved_date, m.badge_icon,
+        // Teacher viewing all their students' milestones (by school)
+        $sql = "SELECT m.id, m.child_id, m.title, m.description, m.badge_emoji, m.achieved_date,
                        CONCAT(c.first_name, ' ', c.last_name) as child_name
                 FROM milestones m
                 JOIN children c ON m.child_id = c.id
-                WHERE c.school_id = (SELECT school_id FROM teachers WHERE id = ?)
+                JOIN teachers t ON c.school_id = t.school_id
+                WHERE t.id = ?
                 ORDER BY m.achieved_date DESC
                 LIMIT 100";
-        
         $stmt = $db->prepare($sql);
         $stmt->bind_param('i', $teacher_id);
         $stmt->execute();
@@ -43,11 +44,11 @@ if ($method === 'GET') {
         exit;
     }
     
-    $sql = "SELECT id, milestone_title, description, achieved_date, badge_icon, category
+    $sql = "SELECT id, milestone_date, description
             FROM milestones
             WHERE child_id = ?
-            ORDER BY achieved_date DESC";
-    
+            ORDER BY milestone_date DESC
+            LIMIT 30";
     $stmt = $db->prepare($sql);
     $stmt->bind_param('i', $child_id);
     $stmt->execute();
@@ -62,25 +63,20 @@ if ($method === 'GET') {
         'success' => true,
         'milestones' => $milestones
     ]);
-    
 } elseif ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     
     $child_id = $data['child_id'] ?? 0;
-    $milestone_title = $data['milestone_title'] ?? '';
+    $milestone_date = $data['milestone_date'] ?? date('Y-m-d');
     $description = $data['description'] ?? '';
-    $achieved_date = $data['achieved_date'] ?? date('Y-m-d');
-    $badge_icon = $data['badge_icon'] ?? '⭐';
-    $category = $data['category'] ?? 'general';
     
-    if ($child_id == 0 || empty($milestone_title)) {
-        echo json_encode(['success' => false, 'message' => 'Child ID and milestone title required']);
+    if ($child_id == 0) {
+        echo json_encode(['success' => false, 'message' => 'Child ID required']);
         exit;
     }
     
-    $stmt = $db->prepare("INSERT INTO milestones (child_id, milestone_title, description, achieved_date, badge_icon, category) 
-                         VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param('isssss', $child_id, $milestone_title, $description, $achieved_date, $badge_icon, $category);
+    $stmt = $db->prepare("INSERT INTO milestones (child_id, milestone_date, description) VALUES (?, ?, ?)");
+    $stmt->bind_param('iss', $child_id, $milestone_date, $description);
     
     if ($stmt->execute()) {
         echo json_encode([
@@ -91,10 +87,10 @@ if ($method === 'GET') {
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to add milestone']);
     }
-    
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
 $db->close();
+
 ?>

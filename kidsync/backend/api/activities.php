@@ -1,4 +1,7 @@
 <?php
+<?php
+
+require_once __DIR__ . '/error_handling_template.php';
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/Database.php';
 
@@ -13,8 +16,7 @@ if ($method === 'GET') {
     
     if ($teacher_id > 0) {
         // Teacher viewing all their students' activities (by school)
-        $sql = "SELECT a.id, a.title, a.description, a.activity_type, a.icon, 
-                       a.activity_time as activity_date, a.created_by,
+        $sql = "SELECT a.id, a.child_id, a.title, a.description, a.activity_type, a.icon, a.activity_time, a.created_by,
                        CONCAT(c.first_name, ' ', c.last_name) as child_name
                 FROM activities a
                 JOIN children c ON a.child_id = c.id
@@ -26,10 +28,12 @@ if ($method === 'GET') {
         $stmt->bind_param('i', $teacher_id);
         $stmt->execute();
         $result = $stmt->get_result();
+        
         $activities = [];
         while ($row = $result->fetch_assoc()) {
             $activities[] = $row;
         }
+        
         echo json_encode([
             'success' => true,
             'activities' => $activities
@@ -61,7 +65,6 @@ if ($method === 'GET') {
         'success' => true,
         'activities' => $activities
     ]);
-    
 } elseif ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     
@@ -93,10 +96,10 @@ if ($method === 'GET') {
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to add activity']);
     }
-    
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
 $db->close();
+
 ?>
