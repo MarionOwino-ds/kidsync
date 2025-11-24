@@ -1,2 +1,1 @@
-# kidsync
-this is a demo version of the  front end of the kidsync application 
+check out the dashboard feature branch for both front end and backend resources  
